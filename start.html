@@ -181,7 +181,24 @@
                 x: -.4,
                 y: -.6,
                 z: -.15
-            }, 5000).easing(TWEEN.Easing.Quadratic.InOut);
+            }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
+
+
+            pos1.start();
+            rot1.start();
+        }
+
+        function forest() {
+            var pos1 = new TWEEN.Tween(camera.position).to({
+                x: -50,
+                y: 50,
+                z: -50
+            }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
+            var rot1 = new TWEEN.Tween(camera.rotation).to({
+                x: -.08,
+                y: -.5,
+                z: -.02
+            }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
 
 
             pos1.start();
