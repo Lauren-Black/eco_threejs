@@ -112,10 +112,10 @@
             });
 
             //position camera
-            camera.position.set(-60, 80, 270);
-            camera.rotation.x = -.3;
-            camera.rotation.y = -.22;
-            camera.rotation.z = -.05;
+            camera.position.set(110, 50, -30);
+            camera.rotation.x = 0;
+            camera.rotation.y = -1.8;
+            camera.rotation.z = 0;
 
             raycaster = new THREE.Raycaster();
             document.addEventListener('mousemove', onDocumentMouseMove, false);
@@ -216,6 +216,24 @@
                 x: -.04,
                 y: -.15,
                 z: -.05
+            }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
+
+
+            pos1.start();
+            rot1.start();
+
+        }
+
+        function smokeStack() {
+            var pos1 = new TWEEN.Tween(camera.position).to({
+                x: 110,
+                y: 50,
+                z: -30
+            }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
+            var rot1 = new TWEEN.Tween(camera.rotation).to({
+                x: 0,
+                y: -1.8,
+                z: 0
             }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
 
 
