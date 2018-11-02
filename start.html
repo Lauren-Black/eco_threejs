@@ -38,6 +38,7 @@
             border-radius: 5px;
             text-align: center;
         }
+
     </style>
 </head>
 
@@ -107,6 +108,9 @@
                 //Fetch camera positions and orientation.
                 window.addEventListener('click', function() {
                     console.log(camera.position);
+
+                    window.position.x = 0.8;
+                    woindow.rotation.y = 10;
                 })
 
                 render();
@@ -264,6 +268,7 @@
 
         //call the init function to run the code
         init();
+
     </script>
 </body>
 
