@@ -45,6 +45,7 @@
     <div id="inner">
         <a href="#" class="button" onclick="floodTown();">Flood Town</a>
         <a href="#" class="button" onclick="forest();">Fire Forest</a>
+        <a href="#" class="button" onclick="tornadoTown();">Tornado Town</a>
     </div>
     <script src="js/three.min.js"></script>
     <script src="js/Detector.js"></script>
@@ -203,6 +204,24 @@
 
             pos1.start();
             rot1.start();
+        }
+
+        function tornadoTown() {
+            var pos1 = new TWEEN.Tween(camera.position).to({
+                x: 160,
+                y: 45,
+                z: 0
+            }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
+            var rot1 = new TWEEN.Tween(camera.rotation).to({
+                x: -.04,
+                y: -.15,
+                z: -.05
+            }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
+
+
+            pos1.start();
+            rot1.start();
+
         }
 
         //call the init function to run the code
