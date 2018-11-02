@@ -62,7 +62,7 @@
             //set up a scene
             scene = new THREE.Scene();
             //add a camera
-            camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera = new THREE.PerspectiveCamera(35, window.innerWidth / window.innerHeight, 0.1, 1000);
             //render the scene - start renderer and set it's size
             renderer = new THREE.WebGLRenderer({
                 antialias: true
@@ -175,7 +175,7 @@
             var pos1 = new TWEEN.Tween(camera.position).to({
                 x: -280,
                 y: 60,
-                z: 70
+                z: 50
             }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
             var rot1 = new TWEEN.Tween(camera.rotation).to({
                 x: -.4,
