@@ -47,6 +47,7 @@
         <a href="#" class="button" onclick="forest();">Fire Forest</a>
         <a href="#" class="button" onclick="tornadoTown();">Tornado Town</a>
         <a href="#" class="button" onclick="smokeStack();">Smoke Stack</a>
+        <a href="#" class="button" onclick="renewableFarm();">Renewable Farm</a>
     </div>
     <script src="js/three.min.js"></script>
     <script src="js/Detector.js"></script>
@@ -113,10 +114,10 @@
             });
 
             //position camera
-            camera.position.set(-60, 80, 270);
-            camera.rotation.x = -.3;
-            camera.rotation.y = -.22;
-            camera.rotation.z = -.05;
+            camera.position.set(45, 50, -30);
+            camera.rotation.x = 0;
+            camera.rotation.y = -3.35;
+            camera.rotation.z = 0;
 
             raycaster = new THREE.Raycaster();
             document.addEventListener('mousemove', onDocumentMouseMove, false);
@@ -234,6 +235,24 @@
             var rot1 = new TWEEN.Tween(camera.rotation).to({
                 x: 0,
                 y: -1.8,
+                z: 0
+            }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
+
+
+            pos1.start();
+            rot1.start();
+
+        }
+
+        function renewableFarm() {
+            var pos1 = new TWEEN.Tween(camera.position).to({
+                x: 45,
+                y: 50,
+                z: -30
+            }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
+            var rot1 = new TWEEN.Tween(camera.rotation).to({
+                x: 0,
+                y: -3.35,
                 z: 0
             }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
 
