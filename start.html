@@ -38,14 +38,13 @@
             border-radius: 5px;
             text-align: center;
         }
-
     </style>
 </head>
 
 <body>
     <div id="inner">
-        <a href="#" class="button" onclick="floodTown">Flood Town</a>
-        <a href="#" class="button" onclick="forest">Fire Forest</a>
+        <a href="#" class="button" onclick="floodTown();">Flood Town</a>
+        <a href="#" class="button" onclick="forest();">Fire Forest</a>
     </div>
     <script src="js/three.min.js"></script>
     <script src="js/Detector.js"></script>
@@ -173,16 +172,16 @@
         }
 
         function floodTown() {
-            var pos1 = new TWEEN.tween(camera.position).to({
+            var pos1 = new TWEEN.Tween(camera.position).to({
                 x: -280,
                 y: 60,
                 z: 70
             }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
-            var rot1 = new TWEEN.tween(camera.rotation).to({
+            var rot1 = new TWEEN.Tween(camera.rotation).to({
                 x: -.4,
                 y: -.6,
                 z: -.15
-            }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
+            }, 5000).easing(TWEEN.Easing.Quadratic.InOut);
 
 
             pos1.start();
@@ -191,7 +190,6 @@
 
         //call the init function to run the code
         init();
-
     </script>
 </body>
 
