@@ -8,15 +8,45 @@
             height: 100%;
             margin: 0;
             padding 0;
+            overflow: hidden;
+            text-align: center;
+        }
+
+        #header {
+            position: absolute;
+            width: 100%;
+            z-index: 100;
+        }
+
+        #inner {
+            position: absolute;
+            bottom: 30px;
+            width: 100%;
+            z-index: 100;
         }
 
         .container {
             background: red;
         }
+
+        .button {
+            margin: 40px;
+            background: #f27d00;
+            color: #fff;
+            text-decoration: none;
+            padding: 15px;
+            border-radius: 5px;
+            text-align: center;
+        }
+
     </style>
 </head>
 
 <body>
+    <div id="inner">
+        <a href="#" class="button" onclick="skyScraper">city</a>
+        <a href="#" class="button" onclick="rural">rural</a>
+    </div>
     <script src="js/three.min.js"></script>
     <script src="js/Detector.js"></script>
     <script src="js/ColladaLoader.js"></script>
@@ -140,6 +170,7 @@
 
         //call the init function to run the code
         init();
+
     </script>
 </body>
 
