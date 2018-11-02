@@ -44,8 +44,8 @@
 
 <body>
     <div id="inner">
-        <a href="#" class="button" onclick="skyScraper">city</a>
-        <a href="#" class="button" onclick="rural">rural</a>
+        <a href="#" class="button" onclick="floodTown">Flood Town</a>
+        <a href="#" class="button" onclick="forest">Fire Forest</a>
     </div>
     <script src="js/three.min.js"></script>
     <script src="js/Detector.js"></script>
@@ -112,10 +112,10 @@
             });
 
             //position camera
-            camera.position.set(-280, 60, 70);
-            camera.rotation.x = -.4;
-            camera.rotation.y = -.6;
-            camera.rotation.z = -.15;
+            camera.position.set(-60, 80, 270);
+            camera.rotation.x = -.3;
+            camera.rotation.y = -.22;
+            camera.rotation.z = -.05;
 
             raycaster = new THREE.Raycaster();
             document.addEventListener('mousemove', onDocumentMouseMove, false);
@@ -144,6 +144,8 @@
             }
         }
 
+
+
         window.addEventListener("resize", () => {
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
@@ -159,6 +161,8 @@
 
             var orbit = Date.now() * 0.01;
 
+            TWEEN.update();
+
             //distance
             //camera.position.x = Math.cos(timer) * 250;
             //camera.position.z = Math.sin(timer) * 250;
@@ -166,6 +170,23 @@
 
             //keep displaying scene
             renderer.render(scene, camera);
+        }
+
+        function floodTown() {
+            var pos1 = new TWEEN.tween(camera.position).to({
+                x: -280,
+                y: 60,
+                z: 70
+            }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
+            var rot1 = new TWEEN.tween(camera.rotation).to({
+                x: -.4,
+                y: -.6,
+                z: -.15
+            }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
+
+
+            pos1.start();
+            rot1.start();
         }
 
         //call the init function to run the code
