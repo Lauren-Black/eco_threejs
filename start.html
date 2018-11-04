@@ -43,6 +43,7 @@
 
 <body>
     <div id="inner">
+        <a href="#" class="button" onclick="menu();">Menu</a>
         <a href="#" class="button" onclick="floodTown();">Flood Town</a>
         <a href="#" class="button" onclick="forest();">Fire Forest</a>
         <a href="#" class="button" onclick="tornadoTown();">Tornado Town</a>
@@ -175,6 +176,23 @@
 
             //keep displaying scene
             renderer.render(scene, camera);
+        }
+
+        function menu() {
+            var pos1 = new TWEEN.Tween(camera.position).to({
+                x: -130,
+                y: 220,
+                z: 470
+            }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
+            var rot1 = new TWEEN.Tween(camera.rotation).to({
+                x: 1,
+                y: -.22,
+                z: -.05
+            }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
+
+
+            pos1.start();
+            rot1.start();
         }
 
         function floodTown() {
