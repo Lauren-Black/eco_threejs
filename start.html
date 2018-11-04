@@ -44,6 +44,7 @@
 
 <body>
     <div id="inner">
+        <a href="#" class="button" onclick="menu();">Menu</a>
         <a href="#" class="button" onclick="floodTown();">Flood Town</a>
         <a href="#" class="button" onclick="forest();">Fire Forest</a>
         <a href="#" class="button" onclick="tornadoTown();">Tornado Town</a>
@@ -97,12 +98,15 @@
                 //Fetch camera positions and orientation.
                 window.addEventListener('click', function() {
                     console.log(camera.position);
+
+                    window.position.x = 0.8;
+                    woindow.rotation.y = 10;
                 })
                 render();
             });
             //position camera
-            camera.position.set(-60, 80, 270);
-            camera.rotation.x = -.3;
+            camera.position.set(-130, 220, 470);
+            camera.rotation.x = 1;
             camera.rotation.y = -.22;
             camera.rotation.z = -.05;
             raycaster = new THREE.Raycaster();
@@ -146,6 +150,23 @@
             //camera.lookAt(scene.position);
             //keep displaying scene
             renderer.render(scene, camera);
+        }
+
+        function menu() {
+            var pos1 = new TWEEN.Tween(camera.position).to({
+                x: -130,
+                y: 220,
+                z: 470
+            }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
+            var rot1 = new TWEEN.Tween(camera.rotation).to({
+                x: 1,
+                y: -.22,
+                z: -.05
+            }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
+
+
+            pos1.start();
+            rot1.start();
         }
 
         function floodTown() {
