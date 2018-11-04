@@ -38,6 +38,7 @@
             border-radius: 5px;
             text-align: center;
         }
+
     </style>
 </head>
 
@@ -70,58 +71,42 @@
             renderer = new THREE.WebGLRenderer({
                 antialias: true
             });
-
             renderer.setSize(window.innerWidth, window.innerHeight);
             renderer.setClearColor(0xcaf8f1, 1);
             renderer.shadowMap.enabled = true;
             renderer.shadowMap.type = THREE.PCFSoftShadowMap;
             //add to webpage
             document.body.appendChild(renderer.domElement);
-
             var light = new THREE.DirectionalLight(0xffffff, 1.5);
             light.position.set(0, 100, 50).normalize();
             scene.add(light);
-
-
             var loader = new THREE.ColladaLoader();
             loader.options.convertUpAxis = true;
-            loader.load('newisland.dae', function(collada) {
-
+            loader.load('scene.dae', function(collada) {
                 var dae = collada.scene;
-
                 dae.traverse(function(child) {
-
                     if (child instanceof THREE.Mesh) {
                         child.castShadow = true;
                         child.receiveShadow = true;
                     }
-
                 });
-
                 dae.scale.x = dae.scale.y = dae.scale.z = 10;
                 dae.updateMatrix();
                 scene.add(dae);
-
-
                 //                var controls = new THREE.OrbitControls(camera, renderer.domElement);
                 //Fetch camera positions and orientation.
                 window.addEventListener('click', function() {
                     console.log(camera.position);
                 })
-
                 render();
-
             });
-
             //position camera
             camera.position.set(-60, 80, 270);
             camera.rotation.x = -.3;
             camera.rotation.y = -.22;
             camera.rotation.z = -.05;
-
             raycaster = new THREE.Raycaster();
             document.addEventListener('mousemove', onDocumentMouseMove, false);
-
             //render the scene
             //render();
         }
@@ -131,23 +116,16 @@
             mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
             mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
         }
-
         document.onmousedown = function(e) {
             raycaster.setFromCamera(mouse, camera);
             var intersects = raycaster.intersectObjects(scene.children, true);
-
             if (intersects.length > 0) {
-
                 INTERSECTED = intersects[0].object;
                 if (INTERSECTED.parent.name == "tree") {
                     INTERSECTED.position.y += 10;
                 }
-
             }
         }
-
-
-
         window.addEventListener("resize", () => {
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
@@ -160,16 +138,12 @@
             //            camera.lookAt(scene.position);
             //speed
             var timer = Date.now() * 0.0001;
-
             var orbit = Date.now() * 0.01;
-
             TWEEN.update();
-
             //distance
             //camera.position.x = Math.cos(timer) * 250;
             //camera.position.z = Math.sin(timer) * 250;
             //camera.lookAt(scene.position);
-
             //keep displaying scene
             renderer.render(scene, camera);
         }
@@ -185,8 +159,6 @@
                 y: -.6,
                 z: -.15
             }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
-
-
             pos1.start();
             rot1.start();
         }
@@ -202,8 +174,6 @@
                 y: -.5,
                 z: -.02
             }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
-
-
             pos1.start();
             rot1.start();
         }
@@ -219,11 +189,8 @@
                 y: -.15,
                 z: -.05
             }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
-
-
             pos1.start();
             rot1.start();
-
         }
 
         function smokeStack() {
@@ -237,11 +204,8 @@
                 y: -1.8,
                 z: 0
             }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
-
-
             pos1.start();
             rot1.start();
-
         }
 
         function renewableFarm() {
@@ -255,15 +219,12 @@
                 y: -3.35,
                 z: 0
             }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
-
-
             pos1.start();
             rot1.start();
-
         }
-
         //call the init function to run the code
         init();
+
     </script>
 </body>
 
