@@ -44,6 +44,7 @@
 <body>
     <div id="inner">
         <a href="#" class="button" onclick="menu();">Menu</a>
+        <a href="#" class="button" onclick="enter();">Enter</a>
         <a href="#" class="button" onclick="floodTown();">Flood Town</a>
         <a href="#" class="button" onclick="forest();">Fire Forest</a>
         <a href="#" class="button" onclick="tornadoTown();">Tornado Town</a>
@@ -109,8 +110,6 @@
                 window.addEventListener('click', function() {
                     console.log(camera.position);
 
-                    window.position.x = 0.8;
-                    woindow.rotation.y = 10;
                 })
 
                 render();
@@ -186,6 +185,23 @@
             }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
             var rot1 = new TWEEN.Tween(camera.rotation).to({
                 x: 1,
+                y: -.22,
+                z: -.05
+            }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
+
+
+            pos1.start();
+            rot1.start();
+        }
+
+        function enter() {
+            var pos1 = new TWEEN.Tween(camera.position).to({
+                x: -140,
+                y: 160,
+                z: 370
+            }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
+            var rot1 = new TWEEN.Tween(camera.rotation).to({
+                x: -.3,
                 y: -.22,
                 z: -.05
             }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
