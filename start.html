@@ -80,9 +80,15 @@
             //add to webpage
             document.body.appendChild(renderer.domElement);
 
-            var light = new THREE.DirectionalLight(0xffffff, 1.5);
-            light.position.set(0, 100, 50).normalize();
-            scene.add(light);
+            var backlight = new THREE.DirectionalLight(0xffffff, 1.5);
+            backlight.position.set(-10, 20, -10).normalize();
+            backlight.intensity = 1.2;
+            scene.add(backlight);
+
+            var frontlight = new THREE.DirectionalLight(0xffffff, 1.5);
+            frontlight.position.set(6, 15, 15).normalize();
+            frontlight.intensity = 1;
+            scene.add(frontlight);
 
 
             var loader = new THREE.ColladaLoader();
