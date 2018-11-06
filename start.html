@@ -10,7 +10,19 @@
             padding 0;
             overflow: hidden;
             text-align: center;
+            background: #11e8bb;
+            /* Old browsers */
+            background: -moz-linear-gradient(top, #11e8bb 0%, #8200c9 100%);
+            /* FF3.6-15 */
+            background: -webkit-linear-gradient(top, #11e8bb 0%, #8200c9 100%);
+            /* Chrome10-25,Safari5.1-6 */
+            background: linear-gradient(to bottom, #11e8bb 0%, #8200c9 100%);
+            /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+            filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#11e8bb', endColorstr='#8200c9', GradientType=0);
+            /* IE6-9 */
         }
+
+        #canvas {}
 
         #header {
             position: absolute;
@@ -42,272 +54,282 @@
 </head>
 
 <body>
-    <div id="inner">
-        <a href="#" class="button" onclick="menu();">Menu</a>
-        <a href="#" class="button" onclick="enter();">Enter</a>
-        <a href="#" class="button" onclick="floodTown();">Flood Town</a>
-        <a href="#" class="button" onclick="forest();">Fire Forest</a>
-        <a href="#" class="button" onclick="tornadoTown();">Tornado Town</a>
-        <a href="#" class="button" onclick="smokeStack();">Smoke Stack</a>
-        <a href="#" class="button" onclick="renewableFarm();">Renewable Farm</a>
-    </div>
-    <script src="js/three.min.js"></script>
-    <script src="js/Detector.js"></script>
-    <script src="js/ColladaLoader.js"></script>
-    <script src="js/OrbitControls.js"></script>
-    <script src="js/tween.min.js"></script>
-    <script>
-        var scene, camera, renderer, raycaster;
-        var mouse = new THREE.Vector2(),
-            INTERSECTED;
-
-        function init() {
-            //add detector to see if WebGL is supported
-            if (!Detector.webgl) Detector.addGetWebGLMessage();
-            //set up a scene
-            scene = new THREE.Scene();
-            //add a camera
-            camera = new THREE.PerspectiveCamera(35, window.innerWidth / window.innerHeight, 0.1, 1000);
-            //render the scene - start renderer and set it's size
-            renderer = new THREE.WebGLRenderer({
-                antialias: true
-            });
-
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            renderer.setClearColor(0xcaf8f1, 1);
-            renderer.shadowMap.enabled = true;
-            renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-            //add to webpage
-            document.body.appendChild(renderer.domElement);
-
-            var backlight = new THREE.DirectionalLight(0xffffff, 1.5);
-            backlight.position.set(-10, 20, -10).normalize();
-            backlight.intensity = 1.2;
-            scene.add(backlight);
-
-            var frontlight = new THREE.DirectionalLight(0xffffff, 1.5);
-            frontlight.position.set(6, 15, 15).normalize();
-            frontlight.intensity = 1;
-            scene.add(frontlight);
+    <div id="canvas">
+        <div id="inner">
+            <a href="#" class="button" onclick="menu();">Menu</a>
+            <a href="#" class="button" onclick="enter();">Enter</a>
+            <a href="#" class="button" onclick="floodTown();">Flood Town</a>
+            <a href="#" class="button" onclick="forest();">Fire Forest</a>
+            <a href="#" class="button" onclick="tornadoTown();">Tornado Town</a>
+            <a href="#" class="button" onclick="smokeStack();">Smoke Stack</a>
+            <a href="#" class="button" onclick="renewableFarm();">Renewable Farm</a>
+        </div>
+        <script src="js/three.min.js"></script>
+        <script src="js/Detector.js"></script>
+        <script src="js/ColladaLoader.js"></script>
+        <script src="js/OrbitControls.js"></script>
+        <script src="js/tween.min.js"></script>
+        <script>
+            var scene, camera, renderer, raycaster;
+            var mouse = new THREE.Vector2(),
+                INTERSECTED;
 
 
-            var loader = new THREE.ColladaLoader();
-            loader.options.convertUpAxis = true;
-            loader.load('newisland.dae', function(collada) {
+            function init() {
+                //add detector to see if WebGL is supported
+                if (!Detector.webgl) Detector.addGetWebGLMessage();
 
-                var dae = collada.scene;
+                //set up a scene
+                scene = new THREE.Scene();
+                //add a camera
+                camera = new THREE.PerspectiveCamera(35, window.innerWidth / window.innerHeight, 0.1, 1000);
+                //render the scene - start renderer and set it's size
+                renderer = new THREE.WebGLRenderer({
+                    antialias: true
+                });
 
-                dae.traverse(function(child) {
+                renderer = new THREE.CanvasRenderer({
+                    alpha: true
+                });
 
-                    if (child instanceof THREE.Mesh) {
-                        child.castShadow = true;
-                        child.receiveShadow = true;
-                    }
+                renderer.setSize(window.innerWidth, window.innerHeight);
+                renderer.autoClear = false;
+                renderer.setClearColor(0x000000, 0.0);
+                document.getElementById('canvas').appendChild(renderer.domElement);
+                renderer.shadowMap.enabled = true;
+                renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+                //add to webpage
+                document.body.appendChild(renderer.domElement);
+
+                var backlight = new THREE.DirectionalLight(0xffffff, 1.5);
+                backlight.position.set(-10, 20, -10).normalize();
+                backlight.intensity = 1.2;
+                scene.add(backlight);
+
+                var frontlight = new THREE.DirectionalLight(0xffffff, 1.5);
+                frontlight.position.set(6, 15, 15).normalize();
+                frontlight.intensity = 1;
+                scene.add(frontlight);
+
+
+                var loader = new THREE.ColladaLoader();
+                loader.options.convertUpAxis = true;
+                loader.load('newisland.dae', function(collada) {
+
+                    var dae = collada.scene;
+
+                    dae.traverse(function(child) {
+
+                        if (child instanceof THREE.Mesh) {
+                            child.castShadow = true;
+                            child.receiveShadow = true;
+                        }
+
+                    });
+
+                    dae.scale.x = dae.scale.y = dae.scale.z = 10;
+                    dae.updateMatrix();
+                    scene.add(dae);
+
+
+                    //                var controls = new THREE.OrbitControls(camera, renderer.domElement);
+                    //Fetch camera positions and orientation.
+                    window.addEventListener('click', function() {
+                        console.log(camera.position);
+
+                    })
+
+                    render();
 
                 });
 
-                dae.scale.x = dae.scale.y = dae.scale.z = 10;
-                dae.updateMatrix();
-                scene.add(dae);
+                //position camera
+                camera.position.set(-130, 220, 470);
+                camera.rotation.x = 1;
+                camera.rotation.y = -.22;
+                camera.rotation.z = -.05;
+
+                raycaster = new THREE.Raycaster();
+                document.addEventListener('mousemove', onDocumentMouseMove, false);
+
+                //render the scene
+                //render();
+            }
+
+            function onDocumentMouseMove(event) {
+                event.preventDefault();
+                mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+                mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+            }
+
+            document.onmousedown = function(e) {
+                raycaster.setFromCamera(mouse, camera);
+                var intersects = raycaster.intersectObjects(scene.children, true);
+
+                if (intersects.length > 0) {
+
+                    INTERSECTED = intersects[0].object;
+                    if (INTERSECTED.parent.name == "tree") {
+                        INTERSECTED.position.y += 10;
+                    }
+
+                }
+            }
 
 
-                //                var controls = new THREE.OrbitControls(camera, renderer.domElement);
-                //Fetch camera positions and orientation.
-                window.addEventListener('click', function() {
-                    console.log(camera.position);
 
-                })
-
-                render();
-
+            window.addEventListener("resize", () => {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
             });
 
-            //position camera
-            camera.position.set(-130, 220, 470);
-            camera.rotation.x = 1;
-            camera.rotation.y = -.22;
-            camera.rotation.z = -.05;
+            function render() {
+                //call to render scene 60fps
+                requestAnimationFrame(render);
+                //            camera.lookAt(scene.position);
+                //speed
+                var timer = Date.now() * 0.0001;
 
-            raycaster = new THREE.Raycaster();
-            document.addEventListener('mousemove', onDocumentMouseMove, false);
+                var orbit = Date.now() * 0.01;
 
-            //render the scene
-            //render();
-        }
+                TWEEN.update();
 
-        function onDocumentMouseMove(event) {
-            event.preventDefault();
-            mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-            mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-        }
+                //distance
+                //camera.position.x = Math.cos(timer) * 250;
+                //camera.position.z = Math.sin(timer) * 250;
+                //camera.lookAt(scene.position);
 
-        document.onmousedown = function(e) {
-            raycaster.setFromCamera(mouse, camera);
-            var intersects = raycaster.intersectObjects(scene.children, true);
+                //keep displaying scene
+                renderer.render(scene, camera);
+            }
 
-            if (intersects.length > 0) {
+            function menu() {
+                var pos1 = new TWEEN.Tween(camera.position).to({
+                    x: -130,
+                    y: 220,
+                    z: 470
+                }, 2000).easing(TWEEN.Easing.Quadratic.InOut);
+                var rot1 = new TWEEN.Tween(camera.rotation).to({
+                    x: 1,
+                    y: -.22,
+                    z: -.05
+                }, 2000).easing(TWEEN.Easing.Quadratic.InOut);
 
-                INTERSECTED = intersects[0].object;
-                if (INTERSECTED.parent.name == "tree") {
-                    INTERSECTED.position.y += 10;
-                }
+
+                pos1.start();
+                rot1.start();
+            }
+
+            function enter() {
+                var pos1 = new TWEEN.Tween(camera.position).to({
+                    x: -140,
+                    y: 160,
+                    z: 370
+                }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
+                var rot1 = new TWEEN.Tween(camera.rotation).to({
+                    x: -.3,
+                    y: -.22,
+                    z: -.05
+                }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
+
+
+                pos1.start();
+                rot1.start();
+            }
+
+            function floodTown() {
+                var pos1 = new TWEEN.Tween(camera.position).to({
+                    x: -280,
+                    y: 60,
+                    z: 50
+                }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
+                var rot1 = new TWEEN.Tween(camera.rotation).to({
+                    x: -.4,
+                    y: -.6,
+                    z: -.15
+                }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
+
+
+                pos1.start();
+                rot1.start();
+            }
+
+            function forest() {
+                var pos1 = new TWEEN.Tween(camera.position).to({
+                    x: -50,
+                    y: 50,
+                    z: -50
+                }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
+                var rot1 = new TWEEN.Tween(camera.rotation).to({
+                    x: -.08,
+                    y: -.5,
+                    z: -.02
+                }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
+
+
+                pos1.start();
+                rot1.start();
+            }
+
+            function tornadoTown() {
+                var pos1 = new TWEEN.Tween(camera.position).to({
+                    x: 160,
+                    y: 45,
+                    z: 0
+                }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
+                var rot1 = new TWEEN.Tween(camera.rotation).to({
+                    x: -.04,
+                    y: -.15,
+                    z: -.05
+                }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
+
+
+                pos1.start();
+                rot1.start();
 
             }
-        }
+
+            function smokeStack() {
+                var pos1 = new TWEEN.Tween(camera.position).to({
+                    x: 110,
+                    y: 50,
+                    z: -30
+                }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
+                var rot1 = new TWEEN.Tween(camera.rotation).to({
+                    x: 0.04,
+                    y: -1.75,
+                    z: 0
+                }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
 
 
+                pos1.start();
+                rot1.start();
 
-        window.addEventListener("resize", () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        });
+            }
 
-        function render() {
-            //call to render scene 60fps
-            requestAnimationFrame(render);
-            //            camera.lookAt(scene.position);
-            //speed
-            var timer = Date.now() * 0.0001;
-
-            var orbit = Date.now() * 0.01;
-
-            TWEEN.update();
-
-            //distance
-            //camera.position.x = Math.cos(timer) * 250;
-            //camera.position.z = Math.sin(timer) * 250;
-            //camera.lookAt(scene.position);
-
-            //keep displaying scene
-            renderer.render(scene, camera);
-        }
-
-        function menu() {
-            var pos1 = new TWEEN.Tween(camera.position).to({
-                x: -130,
-                y: 220,
-                z: 470
-            }, 2000).easing(TWEEN.Easing.Quadratic.InOut);
-            var rot1 = new TWEEN.Tween(camera.rotation).to({
-                x: 1,
-                y: -.22,
-                z: -.05
-            }, 2000).easing(TWEEN.Easing.Quadratic.InOut);
+            function renewableFarm() {
+                var pos1 = new TWEEN.Tween(camera.position).to({
+                    x: 45,
+                    y: 50,
+                    z: -30
+                }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
+                var rot1 = new TWEEN.Tween(camera.rotation).to({
+                    x: 0.04,
+                    y: -3.35,
+                    z: 0.05
+                }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
 
 
-            pos1.start();
-            rot1.start();
-        }
+                pos1.start();
+                rot1.start();
 
-        function enter() {
-            var pos1 = new TWEEN.Tween(camera.position).to({
-                x: -140,
-                y: 160,
-                z: 370
-            }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
-            var rot1 = new TWEEN.Tween(camera.rotation).to({
-                x: -.3,
-                y: -.22,
-                z: -.05
-            }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
+            }
 
-
-            pos1.start();
-            rot1.start();
-        }
-
-        function floodTown() {
-            var pos1 = new TWEEN.Tween(camera.position).to({
-                x: -280,
-                y: 60,
-                z: 50
-            }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
-            var rot1 = new TWEEN.Tween(camera.rotation).to({
-                x: -.4,
-                y: -.6,
-                z: -.15
-            }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
-
-
-            pos1.start();
-            rot1.start();
-        }
-
-        function forest() {
-            var pos1 = new TWEEN.Tween(camera.position).to({
-                x: -50,
-                y: 50,
-                z: -50
-            }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
-            var rot1 = new TWEEN.Tween(camera.rotation).to({
-                x: -.08,
-                y: -.5,
-                z: -.02
-            }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
-
-
-            pos1.start();
-            rot1.start();
-        }
-
-        function tornadoTown() {
-            var pos1 = new TWEEN.Tween(camera.position).to({
-                x: 160,
-                y: 45,
-                z: 0
-            }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
-            var rot1 = new TWEEN.Tween(camera.rotation).to({
-                x: -.04,
-                y: -.15,
-                z: -.05
-            }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
-
-
-            pos1.start();
-            rot1.start();
-
-        }
-
-        function smokeStack() {
-            var pos1 = new TWEEN.Tween(camera.position).to({
-                x: 110,
-                y: 50,
-                z: -30
-            }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
-            var rot1 = new TWEEN.Tween(camera.rotation).to({
-                x: 0.04,
-                y: -1.75,
-                z: 0
-            }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
-
-
-            pos1.start();
-            rot1.start();
-
-        }
-
-        function renewableFarm() {
-            var pos1 = new TWEEN.Tween(camera.position).to({
-                x: 45,
-                y: 50,
-                z: -30
-            }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
-            var rot1 = new TWEEN.Tween(camera.rotation).to({
-                x: 0.04,
-                y: -3.35,
-                z: 0.05
-            }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
-
-
-            pos1.start();
-            rot1.start();
-
-        }
-
-        //call the init function to run the code
-        init();
-    </script>
+            //call the init function to run the code
+            init();
+        </script>
+    </div>
 </body>
 
 </html>
