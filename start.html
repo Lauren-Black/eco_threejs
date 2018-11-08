@@ -10,11 +10,11 @@
             padding 0;
             overflow: hidden;
             text-align: center;
-            background: #000046;
+            background: #4568DC;
             /* fallback for old browsers */
-            background: -webkit-linear-gradient(to bottom, #1CB5E0, #000046);
+            background: -webkit-linear-gradient(to bottom, #a100ff, #3cceff);
             /* Chrome 10-25, Safari 5.1-6 */
-            background: linear-gradient(to bottom, #1CB5E0, #000046);
+            background: linear-gradient(to bottom, #a100ff, #3cceff);
             /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 
 
@@ -68,12 +68,13 @@
         <script src="js/OrbitControls.js"></script>
         <script src="js/tween.min.js"></script>
         <script>
-            var scene, camera, renderer, raycaster;
+            var scene, camera, renderer, raycaster, material, illum;
             var mouse = new THREE.Vector2(),
                 INTERSECTED;
 
 
             function init() {
+                illum = false;
                 //add detector to see if WebGL is supported
                 if (!Detector.webgl) Detector.addGetWebGLMessage();
 
@@ -126,13 +127,19 @@
                     dae.updateMatrix();
                     scene.add(dae);
 
+                    var water = dae.getObjectByName("water", true);
+                    water = water.children[0];
+                    material = water.material;
+                    console.log(material);
+                    water.opacity = 0.5;
+
 
                     //                var controls = new THREE.OrbitControls(camera, renderer.domElement);
                     //Fetch camera positions and orientation.
-                    window.addEventListener('click', function() {
-                        console.log(camera.position);
-
-                    })
+                    //                    window.addEventListener('click', function() {
+                    // console.log(camera.position);
+                    //
+                    // })
 
                     render();
 
