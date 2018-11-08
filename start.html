@@ -48,12 +48,29 @@
             border-radius: 5px;
             text-align: center;
         }
+        
+        input[type=range].slide{
+            -webkit-appearance: none;
+            background-color: #666;
+            height: 6px;
+            width: 300px;
+            border-radius: 3px;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb{
+            -webkit-appearance:none;
+            background-color: #bbb;
+            width:20px;
+            height: 20px;
+            border-radius: 50px;
+        }
     </style>
 </head>
 
 <body>
     <div id="canvas">
         <div id="inner">
+            <input class="slide" type="range" min="0" max="4" step="2" value="0" oninput="showVal (this.value)">
             <a href="#" class="button" onclick="menu();">Menu</a>
             <a href="#" class="button" onclick="enter();">Enter</a>
             <a href="#" class="button" onclick="floodTown();">Flood Town</a>
@@ -68,7 +85,8 @@
         <script src="js/OrbitControls.js"></script>
         <script src="js/tween.min.js"></script>
         <script>
-            var scene, camera, renderer, raycaster, material, illum;
+            var scene, camera, renderer, raycaster, material, illum, water, waterHt = 1,
+                lastVal = 0;
             var mouse = new THREE.Vector2(),
                 INTERSECTED;
 
@@ -128,10 +146,7 @@
                     scene.add(dae);
 
                     var water = dae.getObjectByName("water", true);
-                    water = water.children[0];
-                    material = water.material;
-                    console.log(material);
-                    water.opacity = 0.5;
+
 
 
                     //                var controls = new THREE.OrbitControls(camera, renderer.domElement);
@@ -171,7 +186,7 @@
                 if (intersects.length > 0) {
 
                     INTERSECTED = intersects[0].object;
-                    if (INTERSECTED.parent.name == "water") {
+                    if (INTERSECTED.parent.name == "cow") {
                         INTERSECTED.position.y += 1.5;
                     }
 
@@ -205,6 +220,14 @@
                 //keep displaying scene
                 renderer.render(scene, camera);
             }
+
+            //            function showVal(val) {
+            // if (val! = lastVal) {
+            // if (val > lastVal) {
+            // waterHt += 0.07;
+            // }
+            // }
+            // }
 
             function menu() {
                 var pos1 = new TWEEN.Tween(camera.position).to({
