@@ -62,7 +62,7 @@
             background-color: #bbb;
             width:20px;
             height: 20px;
-            border-radius: 50px;
+            border-radius: 50%;
         }
     </style>
 </head>
@@ -70,7 +70,7 @@
 <body>
     <div id="canvas">
         <div id="inner">
-            <input class="slide" type="range" min="0" max="4" step="2" value="0" oninput="showVal (this.value)">
+            <input class="slide" type="range" min="0" max="4" step="2" value="0" oninput="showVal(this.value)">
             <a href="#" class="button" onclick="menu();">Menu</a>
             <a href="#" class="button" onclick="enter();">Enter</a>
             <a href="#" class="button" onclick="floodTown();">Flood Town</a>
@@ -128,7 +128,7 @@
 
                 var loader = new THREE.ColladaLoader();
                 loader.options.convertUpAxis = true;
-                loader.load('newisland.dae', function(collada) {
+                loader.load('newislandex4d.dae', function(collada) {
 
                     var dae = collada.scene;
 
@@ -145,8 +145,8 @@
                     dae.updateMatrix();
                     scene.add(dae);
 
-                    var water = dae.getObjectByName("water", true);
 
+                    var water = dae.getObjectByName("water", true);
 
 
                     //                var controls = new THREE.OrbitControls(camera, renderer.domElement);
@@ -179,19 +179,19 @@
                 mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
             }
 
-            document.onmousedown = function(e) {
-                raycaster.setFromCamera(mouse, camera);
-                var intersects = raycaster.intersectObjects(scene.children, true);
-
-                if (intersects.length > 0) {
-
-                    INTERSECTED = intersects[0].object;
-                    if (INTERSECTED.parent.name == "cow") {
-                        INTERSECTED.position.y += 1.5;
-                    }
-
-                }
-            }
+            //document.onmousedown = function(e) {
+            //raycaster.setFromCamera(mouse, camera);
+            //var intersects = raycaster.intersectObjects(scene.children, true);
+            //
+            //if (intersects.length > 0) {
+            //
+            //INTERSECTED = intersects[0].object;
+            //if (INTERSECTED.parent.name == "cow") {
+            //INTERSECTED.position.y += 1.5;
+            //}
+            //
+            //}
+            //}
 
 
 
@@ -221,13 +221,28 @@
                 renderer.render(scene, camera);
             }
 
-            //            function showVal(val) {
-            // if (val! = lastVal) {
-            // if (val > lastVal) {
-            // waterHt += 0.07;
-            // }
-            // }
-            // }
+
+
+
+
+            function showVal(val) {
+                if (val != lastVal) {
+                    if (val > lastVal) {
+                        waterHt += 0.07;
+                        new TWEEN.Tween(water.scale).to({
+                            y: waterHt
+                        }, 800).easing(TWEEN.Easing.Quadratic.InOut).start();
+                    } else {
+                        waterHt -= 0.07;
+                        new TWEEN.Tween(water.scale).to({
+                            y: waterHt
+                        }, 800).easing(TWEEN.Easing.Quadratic.InOut).start();
+
+                    }
+                    lastVal = val;
+                }
+
+            }
 
             function menu() {
                 var pos1 = new TWEEN.Tween(camera.position).to({
