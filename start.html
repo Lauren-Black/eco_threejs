@@ -70,7 +70,7 @@
 <body>
     <div id="canvas">
         <div id="inner">
-            <input class="slide" type="range" min="0" max="4" step="2" value="0" oninput="showVal(this.value)">
+<!--            <input class="slide" type="range" min="0" max="4" step="2" value="0" oninput="showVal(this.value)">-->
             <a href="#" class="button" onclick="menu();">Menu</a>
             <a href="#" class="button" onclick="enter();">Enter</a>
             <a href="#" class="button" onclick="floodTown();">Flood Town</a>
@@ -225,24 +225,24 @@
 
 
 
-            function showVal(val) {
-                if (val != lastVal) {
-                    if (val > lastVal) {
-                        waterHt += 0.07;
-                        new TWEEN.Tween(water.scale).to({
-                            y: waterHt
-                        }, 800).easing(TWEEN.Easing.Quadratic.InOut).start();
-                    } else {
-                        waterHt -= 0.07;
-                        new TWEEN.Tween(water.scale).to({
-                            y: waterHt
-                        }, 800).easing(TWEEN.Easing.Quadratic.InOut).start();
-
-                    }
-                    lastVal = val;
-                }
-
-            }
+//            function showVal(val) {
+// if (val != lastVal) {
+// if (val > lastVal) {
+// waterHt += 0.07;
+// new TWEEN.Tween(water.scale).to({
+// y: waterHt
+// }, 800).easing(TWEEN.Easing.Quadratic.InOut).start();
+// } else {
+// waterHt -= 0.07;
+// new TWEEN.Tween(water.scale).to({
+// y: waterHt
+// }, 800).easing(TWEEN.Easing.Quadratic.InOut).start();
+//
+// }
+// lastVal = val;
+// }
+//
+// }
 
             function menu() {
                 var pos1 = new TWEEN.Tween(camera.position).to({
