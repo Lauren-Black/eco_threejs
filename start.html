@@ -10,12 +10,17 @@
             padding 0;
             overflow: hidden;
             text-align: center;
-            background: #4568DC;
+            background: #FF5F6D;
             /* fallback for old browsers */
-            background: -webkit-linear-gradient(to bottom, #a100ff, #3cceff);
+            background: -webkit-linear-gradient(to bottom, #FFC371, #FF5F6D);
             /* Chrome 10-25, Safari 5.1-6 */
-            background: linear-gradient(to bottom, #a100ff, #3cceff);
+            background: linear-gradient(to bottom, #FFC371, #FF5F6D);
             /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+
+
+
+
 
 
         }
@@ -27,12 +32,22 @@
             width: 100%;
             z-index: 100;
         }
+        #badge {
+            margin-top: 8px;
+            width: 100%;
+            max-width: 1920px;
+            margin-top: 50px;
+        }
 
         #inner {
             position: absolute;
             bottom: 30px;
             width: 100%;
             z-index: 100;
+        }
+        
+        enter{
+            
         }
 
         .container {
@@ -41,38 +56,43 @@
 
         .button {
             margin: 40px;
-            background: #f27d00;
+            background: #3CCEFF;
             color: #fff;
             text-decoration: none;
             padding: 15px;
             border-radius: 5px;
             text-align: center;
         }
-        
-        input[type=range].slide{
+
+        input[type=range].slide {
             -webkit-appearance: none;
             background-color: #666;
             height: 6px;
             width: 300px;
             border-radius: 3px;
         }
-        
-        input[type="range"]::-webkit-slider-thumb{
-            -webkit-appearance:none;
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
             background-color: #bbb;
-            width:20px;
+            width: 20px;
             height: 20px;
             border-radius: 50%;
         }
+
     </style>
 </head>
 
 <body>
     <div id="canvas">
+       <div id="header">
+               <img src="title.png" id="badge">
+           </div>
         <div id="inner">
-<!--            <input class="slide" type="range" min="0" max="4" step="2" value="0" oninput="showVal(this.value)">-->
+           
+            <!--<input class="slide" type="range" min="0" max="4" step="2" value="0" oninput="showVal(this.value)">-->
             <a href="#" class="button" onclick="menu();">Menu</a>
-            <a href="#" class="button" onclick="enter();">Enter</a>
+            <a href="#" class="button" id="enter" onclick="enter();">Enter</a>
             <a href="#" class="button" onclick="floodTown();">Flood Town</a>
             <a href="#" class="button" onclick="forest();">Fire Forest</a>
             <a href="#" class="button" onclick="tornadoTown();">Tornado Town</a>
@@ -86,7 +106,9 @@
         <script src="js/tween.min.js"></script>
         <script>
             var scene, camera, renderer, raycaster, material, illum, water, waterHt = 1,
-                lastVal = 0;
+                lastVal = 0,
+                particles, particleCount, particleSystem;
+            var textureLoader = new THREE.TextureLoader();
             var mouse = new THREE.Vector2(),
                 INTERSECTED;
 
@@ -124,6 +146,43 @@
                 frontlight.position.set(6, 15, 15).normalize();
                 frontlight.intensity = 1;
                 scene.add(frontlight);
+
+                particleCount = 1500;
+                particles = new THREE.Geometry();
+                var pMaterial1 = new THREE.PointsMaterial({
+                    color: 0xD60000,
+                    size: 3,
+                    map: textureLoader.load("../img/flame.png"),
+                    alphaTest: 0.3,
+                    opacity: 0.9,
+                    transparent: true
+                });
+
+                var pMaterial2 = new THREE.PointsMaterial({
+                    color: 0xF4870F,
+                    size: 3,
+                    map: textureLoader.load("../img/flame.png"),
+                    alphaTest: 0.3,
+                    opacity: 0.9,
+                    transparent: true
+                });
+
+                for (var i = 0; i < particleCount; i++) {
+
+                    var pX = Math.random() * 50 - 10,
+                        pY = 10,
+                        pZ = Math.random() * 80 - 180;
+                    var particle = new THREE.Vector3(pX, pY, pZ);
+                    particle.velocity = new THREE.Vector3(0, (Math.random() * 0.9), 0);
+
+                    particles.vertices.push(particle);
+
+                }
+
+                particleSystem = new THREE.Points(particles, pMaterial1, pMaterial2);
+
+                particleSystem.sortParticles = true;
+                scene.add(particleSystem);
 
 
                 var loader = new THREE.ColladaLoader();
@@ -179,195 +238,217 @@
                 mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
             }
 
-            //document.onmousedown = function(e) {
-            //raycaster.setFromCamera(mouse, camera);
-            //var intersects = raycaster.intersectObjects(scene.children, true);
-            //
-            //if (intersects.length > 0) {
-            //
-            //INTERSECTED = intersects[0].object;
-            //if (INTERSECTED.parent.name == "cow") {
-            //INTERSECTED.position.y += 1.5;
-            //}
-            //
-            //}
-            //}
+            document.onmousedown = function(e) {
+                    raycaster.setFromCamera(mouse, camera);
+                    var intersects = raycaster.intersectObjects(scene.children, true);
+
+                    if (intersects.length > 0) {
+
+                        INTERSECTED = intersects[0].object;
+                        if (INTERSECTED.parent.name == "water") {
+                            INTERSECTED.position.z += 1.5;
+                        }
+                        
+                        if (INTERSECTED.parent.name == "tornado") {
+                            INTERSECTED.rotation.z += 0.5;
+                        }
+
+                        }
+                    }
 
 
 
-            window.addEventListener("resize", () => {
-                camera.aspect = window.innerWidth / window.innerHeight;
-                camera.updateProjectionMatrix();
-                renderer.setSize(window.innerWidth, window.innerHeight);
-            });
+                    window.addEventListener("resize", () => {
+                        camera.aspect = window.innerWidth / window.innerHeight;
+                        camera.updateProjectionMatrix();
+                        renderer.setSize(window.innerWidth, window.innerHeight);
+                    });
 
-            function render() {
-                //call to render scene 60fps
-                requestAnimationFrame(render);
-                //            camera.lookAt(scene.position);
-                //speed
-                var timer = Date.now() * 0.0001;
+                    function render() {
+                        //call to render scene 60fps
+                        requestAnimationFrame(render);
+                        //            camera.lookAt(scene.position);
+                        //speed
+                        var timer = Date.now() * 0.0001;
 
-                var orbit = Date.now() * 0.01;
+                        var orbit = Date.now() * 0.01;
 
-                TWEEN.update();
-
-                //distance
-                //camera.position.x = Math.cos(timer) * 250;
-                //camera.position.z = Math.sin(timer) * 250;
-                //camera.lookAt(scene.position);
-
-                //keep displaying scene
-                renderer.render(scene, camera);
-            }
+                        TWEEN.update();
 
 
+                        for (var i = 0; i < particleCount; i++) {
+
+                            var ptcl = particles.vertices[i];
+                            //check if its above level and if so reset
+                            if (ptcl.y > 80) {
+                                ptcl.y = 10;
+                                ptcl.velocity.y = (Math.random() * 0.5);
+                            }
+
+                            ptcl.velocity.y += Math.random() * 0.001;
+                            ptcl.add(ptcl.velocity);
+
+                        }
+
+                        particles.verticesNeedUpdate = true;
+
+                        //distance
+                        //camera.position.x = Math.cos(timer) * 250;
+                        //camera.position.z = Math.sin(timer) * 250;
+                        //camera.lookAt(scene.position);
+
+                        //keep displaying scene
+                        renderer.render(scene, camera);
+                    }
 
 
 
-//            function showVal(val) {
-// if (val != lastVal) {
-// if (val > lastVal) {
-// waterHt += 0.07;
-// new TWEEN.Tween(water.scale).to({
-// y: waterHt
-// }, 800).easing(TWEEN.Easing.Quadratic.InOut).start();
-// } else {
-// waterHt -= 0.07;
-// new TWEEN.Tween(water.scale).to({
-// y: waterHt
-// }, 800).easing(TWEEN.Easing.Quadratic.InOut).start();
-//
-// }
-// lastVal = val;
-// }
-//
-// }
-
-            function menu() {
-                var pos1 = new TWEEN.Tween(camera.position).to({
-                    x: -130,
-                    y: 220,
-                    z: 470
-                }, 2000).easing(TWEEN.Easing.Quadratic.InOut);
-                var rot1 = new TWEEN.Tween(camera.rotation).to({
-                    x: 1,
-                    y: -.22,
-                    z: -.05
-                }, 2000).easing(TWEEN.Easing.Quadratic.InOut);
 
 
-                pos1.start();
-                rot1.start();
-            }
+                    //            function showVal(val) {
+                    // if (val != lastVal) {
+                    // if (val > lastVal) {
+                    // waterHt += 0.07;
+                    // new TWEEN.Tween(water.scale).to({
+                    // y: waterHt
+                    // }, 800).easing(TWEEN.Easing.Quadratic.InOut).start();
+                    // } else {
+                    // waterHt -= 0.07;
+                    // new TWEEN.Tween(water.scale).to({
+                    // y: waterHt
+                    // }, 800).easing(TWEEN.Easing.Quadratic.InOut).start();
+                    //
+                    // }
+                    // lastVal = val;
+                    // }
+                    //
+                    // }
 
-            function enter() {
-                var pos1 = new TWEEN.Tween(camera.position).to({
-                    x: -140,
-                    y: 160,
-                    z: 370
-                }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
-                var rot1 = new TWEEN.Tween(camera.rotation).to({
-                    x: -.3,
-                    y: -.22,
-                    z: -.05
-                }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
-
-
-                pos1.start();
-                rot1.start();
-            }
-
-            function floodTown() {
-                var pos1 = new TWEEN.Tween(camera.position).to({
-                    x: -280,
-                    y: 60,
-                    z: 50
-                }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
-                var rot1 = new TWEEN.Tween(camera.rotation).to({
-                    x: -.4,
-                    y: -.6,
-                    z: -.15
-                }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
+                    function menu() {
+                        var pos1 = new TWEEN.Tween(camera.position).to({
+                            x: -130,
+                            y: 220,
+                            z: 470
+                        }, 2000).easing(TWEEN.Easing.Quadratic.InOut);
+                        var rot1 = new TWEEN.Tween(camera.rotation).to({
+                            x: 1,
+                            y: -.22,
+                            z: -.05
+                        }, 2000).easing(TWEEN.Easing.Quadratic.InOut);
 
 
-                pos1.start();
-                rot1.start();
-            }
+                        pos1.start();
+                        rot1.start();
+                    }
 
-            function forest() {
-                var pos1 = new TWEEN.Tween(camera.position).to({
-                    x: -50,
-                    y: 50,
-                    z: -50
-                }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
-                var rot1 = new TWEEN.Tween(camera.rotation).to({
-                    x: -.08,
-                    y: -.5,
-                    z: -.02
-                }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
-
-
-                pos1.start();
-                rot1.start();
-            }
-
-            function tornadoTown() {
-                var pos1 = new TWEEN.Tween(camera.position).to({
-                    x: 160,
-                    y: 45,
-                    z: 0
-                }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
-                var rot1 = new TWEEN.Tween(camera.rotation).to({
-                    x: -.04,
-                    y: -.15,
-                    z: -.05
-                }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
+                    function enter() {
+                        var pos1 = new TWEEN.Tween(camera.position).to({
+                            x: -140,
+                            y: 160,
+                            z: 370
+                        }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
+                        var rot1 = new TWEEN.Tween(camera.rotation).to({
+                            x: -.3,
+                            y: -.22,
+                            z: -.05
+                        }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
 
 
-                pos1.start();
-                rot1.start();
+                        pos1.start();
+                        rot1.start();
+                    }
 
-            }
-
-            function smokeStack() {
-                var pos1 = new TWEEN.Tween(camera.position).to({
-                    x: 110,
-                    y: 50,
-                    z: -30
-                }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
-                var rot1 = new TWEEN.Tween(camera.rotation).to({
-                    x: 0.04,
-                    y: -1.75,
-                    z: 0
-                }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
-
-
-                pos1.start();
-                rot1.start();
-
-            }
-
-            function renewableFarm() {
-                var pos1 = new TWEEN.Tween(camera.position).to({
-                    x: 45,
-                    y: 50,
-                    z: -30
-                }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
-                var rot1 = new TWEEN.Tween(camera.rotation).to({
-                    x: 0.04,
-                    y: -3.35,
-                    z: 0.05
-                }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
+                    function floodTown() {
+                        var pos1 = new TWEEN.Tween(camera.position).to({
+                            x: -280,
+                            y: 60,
+                            z: 50
+                        }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
+                        var rot1 = new TWEEN.Tween(camera.rotation).to({
+                            x: -.4,
+                            y: -.6,
+                            z: -.15
+                        }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
 
 
-                pos1.start();
-                rot1.start();
+                        pos1.start();
+                        rot1.start();
+                    }
 
-            }
+                    function forest() {
+                        var pos1 = new TWEEN.Tween(camera.position).to({
+                            x: -50,
+                            y: 50,
+                            z: -50
+                        }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
+                        var rot1 = new TWEEN.Tween(camera.rotation).to({
+                            x: -.08,
+                            y: -.5,
+                            z: -.02
+                        }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
 
-            //call the init function to run the code
-            init();
+
+                        pos1.start();
+                        rot1.start();
+                    }
+
+                    function tornadoTown() {
+                        var pos1 = new TWEEN.Tween(camera.position).to({
+                            x: 160,
+                            y: 45,
+                            z: 0
+                        }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
+                        var rot1 = new TWEEN.Tween(camera.rotation).to({
+                            x: -.04,
+                            y: -.15,
+                            z: -.05
+                        }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
+
+
+                        pos1.start();
+                        rot1.start();
+
+                    }
+
+                    function smokeStack() {
+                        var pos1 = new TWEEN.Tween(camera.position).to({
+                            x: 110,
+                            y: 50,
+                            z: -30
+                        }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
+                        var rot1 = new TWEEN.Tween(camera.rotation).to({
+                            x: 0.04,
+                            y: -1.75,
+                            z: 0
+                        }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
+
+
+                        pos1.start();
+                        rot1.start();
+
+                    }
+
+                    function renewableFarm() {
+                        var pos1 = new TWEEN.Tween(camera.position).to({
+                            x: 45,
+                            y: 50,
+                            z: -30
+                        }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
+                        var rot1 = new TWEEN.Tween(camera.rotation).to({
+                            x: 0.04,
+                            y: -3.35,
+                            z: 0.05
+                        }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
+
+
+                        pos1.start();
+                        rot1.start();
+
+                    }
+
+                    //call the init function to run the code
+                    init();
+
         </script>
     </div>
 </body>
