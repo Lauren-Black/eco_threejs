@@ -32,6 +32,7 @@
             width: 100%;
             z-index: 100;
         }
+
         #badge {
             margin-top: 8px;
             width: 100%;
@@ -45,14 +46,8 @@
             width: 100%;
             z-index: 100;
         }
-        
-        enter{
-            
-        }
 
-        .container {
-            background: red;
-        }
+        enter {}
 
         .button {
             margin: 40px;
@@ -85,11 +80,11 @@
 
 <body>
     <div id="canvas">
-       <div id="header">
-               <img src="title.png" id="badge">
-           </div>
+        <div id="header">
+            <img src="title.png" id="badge">
+        </div>
         <div id="inner">
-           
+
             <!--<input class="slide" type="range" min="0" max="4" step="2" value="0" oninput="showVal(this.value)">-->
             <a href="#" class="button" onclick="menu();">Menu</a>
             <a href="#" class="button" id="enter" onclick="enter();">Enter</a>
@@ -239,215 +234,215 @@
             }
 
             document.onmousedown = function(e) {
-                    raycaster.setFromCamera(mouse, camera);
-                    var intersects = raycaster.intersectObjects(scene.children, true);
+                raycaster.setFromCamera(mouse, camera);
+                var intersects = raycaster.intersectObjects(scene.children, true);
 
-                    if (intersects.length > 0) {
+                if (intersects.length > 0) {
 
-                        INTERSECTED = intersects[0].object;
-                        if (INTERSECTED.parent.name == "water") {
-                            INTERSECTED.position.z += 1.5;
-                        }
-                        
-                        if (INTERSECTED.parent.name == "tornado") {
-                            INTERSECTED.rotation.z += 0.5;
-                        }
-
-                        }
+                    INTERSECTED = intersects[0].object;
+                    if (INTERSECTED.parent.name == "water") {
+                        INTERSECTED.position.z += 1.5;
                     }
 
-
-
-                    window.addEventListener("resize", () => {
-                        camera.aspect = window.innerWidth / window.innerHeight;
-                        camera.updateProjectionMatrix();
-                        renderer.setSize(window.innerWidth, window.innerHeight);
-                    });
-
-                    function render() {
-                        //call to render scene 60fps
-                        requestAnimationFrame(render);
-                        //            camera.lookAt(scene.position);
-                        //speed
-                        var timer = Date.now() * 0.0001;
-
-                        var orbit = Date.now() * 0.01;
-
-                        TWEEN.update();
-
-
-                        for (var i = 0; i < particleCount; i++) {
-
-                            var ptcl = particles.vertices[i];
-                            //check if its above level and if so reset
-                            if (ptcl.y > 80) {
-                                ptcl.y = 10;
-                                ptcl.velocity.y = (Math.random() * 0.5);
-                            }
-
-                            ptcl.velocity.y += Math.random() * 0.001;
-                            ptcl.add(ptcl.velocity);
-
-                        }
-
-                        particles.verticesNeedUpdate = true;
-
-                        //distance
-                        //camera.position.x = Math.cos(timer) * 250;
-                        //camera.position.z = Math.sin(timer) * 250;
-                        //camera.lookAt(scene.position);
-
-                        //keep displaying scene
-                        renderer.render(scene, camera);
+                    if (INTERSECTED.parent.name == "tornado") {
+                        INTERSECTED.rotation.z += 0.5;
                     }
 
+                }
+            }
 
 
 
+            window.addEventListener("resize", () => {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            });
 
-                    //            function showVal(val) {
-                    // if (val != lastVal) {
-                    // if (val > lastVal) {
-                    // waterHt += 0.07;
-                    // new TWEEN.Tween(water.scale).to({
-                    // y: waterHt
-                    // }, 800).easing(TWEEN.Easing.Quadratic.InOut).start();
-                    // } else {
-                    // waterHt -= 0.07;
-                    // new TWEEN.Tween(water.scale).to({
-                    // y: waterHt
-                    // }, 800).easing(TWEEN.Easing.Quadratic.InOut).start();
-                    //
-                    // }
-                    // lastVal = val;
-                    // }
-                    //
-                    // }
+            function render() {
+                //call to render scene 60fps
+                requestAnimationFrame(render);
+                //            camera.lookAt(scene.position);
+                //speed
+                var timer = Date.now() * 0.0001;
 
-                    function menu() {
-                        var pos1 = new TWEEN.Tween(camera.position).to({
-                            x: -130,
-                            y: 220,
-                            z: 470
-                        }, 2000).easing(TWEEN.Easing.Quadratic.InOut);
-                        var rot1 = new TWEEN.Tween(camera.rotation).to({
-                            x: 1,
-                            y: -.22,
-                            z: -.05
-                        }, 2000).easing(TWEEN.Easing.Quadratic.InOut);
+                var orbit = Date.now() * 0.01;
+
+                TWEEN.update();
 
 
-                        pos1.start();
-                        rot1.start();
+                for (var i = 0; i < particleCount; i++) {
+
+                    var ptcl = particles.vertices[i];
+                    //check if its above level and if so reset
+                    if (ptcl.y > 80) {
+                        ptcl.y = 10;
+                        ptcl.velocity.y = (Math.random() * 0.5);
                     }
 
-                    function enter() {
-                        var pos1 = new TWEEN.Tween(camera.position).to({
-                            x: -140,
-                            y: 160,
-                            z: 370
-                        }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
-                        var rot1 = new TWEEN.Tween(camera.rotation).to({
-                            x: -.3,
-                            y: -.22,
-                            z: -.05
-                        }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
+                    ptcl.velocity.y += Math.random() * 0.001;
+                    ptcl.add(ptcl.velocity);
+
+                }
+
+                particles.verticesNeedUpdate = true;
+
+                //distance
+                //camera.position.x = Math.cos(timer) * 250;
+                //camera.position.z = Math.sin(timer) * 250;
+                //camera.lookAt(scene.position);
+
+                //keep displaying scene
+                renderer.render(scene, camera);
+            }
 
 
-                        pos1.start();
-                        rot1.start();
-                    }
-
-                    function floodTown() {
-                        var pos1 = new TWEEN.Tween(camera.position).to({
-                            x: -280,
-                            y: 60,
-                            z: 50
-                        }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
-                        var rot1 = new TWEEN.Tween(camera.rotation).to({
-                            x: -.4,
-                            y: -.6,
-                            z: -.15
-                        }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
 
 
-                        pos1.start();
-                        rot1.start();
-                    }
 
-                    function forest() {
-                        var pos1 = new TWEEN.Tween(camera.position).to({
-                            x: -50,
-                            y: 50,
-                            z: -50
-                        }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
-                        var rot1 = new TWEEN.Tween(camera.rotation).to({
-                            x: -.08,
-                            y: -.5,
-                            z: -.02
-                        }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
+            //            function showVal(val) {
+            // if (val != lastVal) {
+            // if (val > lastVal) {
+            // waterHt += 0.07;
+            // new TWEEN.Tween(water.scale).to({
+            // y: waterHt
+            // }, 800).easing(TWEEN.Easing.Quadratic.InOut).start();
+            // } else {
+            // waterHt -= 0.07;
+            // new TWEEN.Tween(water.scale).to({
+            // y: waterHt
+            // }, 800).easing(TWEEN.Easing.Quadratic.InOut).start();
+            //
+            // }
+            // lastVal = val;
+            // }
+            //
+            // }
 
-
-                        pos1.start();
-                        rot1.start();
-                    }
-
-                    function tornadoTown() {
-                        var pos1 = new TWEEN.Tween(camera.position).to({
-                            x: 160,
-                            y: 45,
-                            z: 0
-                        }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
-                        var rot1 = new TWEEN.Tween(camera.rotation).to({
-                            x: -.04,
-                            y: -.15,
-                            z: -.05
-                        }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
-
-
-                        pos1.start();
-                        rot1.start();
-
-                    }
-
-                    function smokeStack() {
-                        var pos1 = new TWEEN.Tween(camera.position).to({
-                            x: 110,
-                            y: 50,
-                            z: -30
-                        }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
-                        var rot1 = new TWEEN.Tween(camera.rotation).to({
-                            x: 0.04,
-                            y: -1.75,
-                            z: 0
-                        }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
+            function menu() {
+                var pos1 = new TWEEN.Tween(camera.position).to({
+                    x: -130,
+                    y: 220,
+                    z: 470
+                }, 2000).easing(TWEEN.Easing.Quadratic.InOut);
+                var rot1 = new TWEEN.Tween(camera.rotation).to({
+                    x: 1,
+                    y: -.22,
+                    z: -.05
+                }, 2000).easing(TWEEN.Easing.Quadratic.InOut);
 
 
-                        pos1.start();
-                        rot1.start();
+                pos1.start();
+                rot1.start();
+            }
 
-                    }
-
-                    function renewableFarm() {
-                        var pos1 = new TWEEN.Tween(camera.position).to({
-                            x: 45,
-                            y: 50,
-                            z: -30
-                        }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
-                        var rot1 = new TWEEN.Tween(camera.rotation).to({
-                            x: 0.04,
-                            y: -3.35,
-                            z: 0.05
-                        }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
+            function enter() {
+                var pos1 = new TWEEN.Tween(camera.position).to({
+                    x: -140,
+                    y: 160,
+                    z: 370
+                }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
+                var rot1 = new TWEEN.Tween(camera.rotation).to({
+                    x: -.3,
+                    y: -.22,
+                    z: -.05
+                }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
 
 
-                        pos1.start();
-                        rot1.start();
+                pos1.start();
+                rot1.start();
+            }
 
-                    }
+            function floodTown() {
+                var pos1 = new TWEEN.Tween(camera.position).to({
+                    x: -280,
+                    y: 60,
+                    z: 50
+                }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
+                var rot1 = new TWEEN.Tween(camera.rotation).to({
+                    x: -.4,
+                    y: -.6,
+                    z: -.15
+                }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
 
-                    //call the init function to run the code
-                    init();
+
+                pos1.start();
+                rot1.start();
+            }
+
+            function forest() {
+                var pos1 = new TWEEN.Tween(camera.position).to({
+                    x: -50,
+                    y: 50,
+                    z: -50
+                }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
+                var rot1 = new TWEEN.Tween(camera.rotation).to({
+                    x: -.08,
+                    y: -.5,
+                    z: -.02
+                }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
+
+
+                pos1.start();
+                rot1.start();
+            }
+
+            function tornadoTown() {
+                var pos1 = new TWEEN.Tween(camera.position).to({
+                    x: 160,
+                    y: 45,
+                    z: 0
+                }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
+                var rot1 = new TWEEN.Tween(camera.rotation).to({
+                    x: -.04,
+                    y: -.15,
+                    z: -.05
+                }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
+
+
+                pos1.start();
+                rot1.start();
+
+            }
+
+            function smokeStack() {
+                var pos1 = new TWEEN.Tween(camera.position).to({
+                    x: 110,
+                    y: 50,
+                    z: -30
+                }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
+                var rot1 = new TWEEN.Tween(camera.rotation).to({
+                    x: 0.04,
+                    y: -1.75,
+                    z: 0
+                }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
+
+
+                pos1.start();
+                rot1.start();
+
+            }
+
+            function renewableFarm() {
+                var pos1 = new TWEEN.Tween(camera.position).to({
+                    x: 45,
+                    y: 50,
+                    z: -30
+                }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
+                var rot1 = new TWEEN.Tween(camera.rotation).to({
+                    x: 0.04,
+                    y: -3.35,
+                    z: 0.05
+                }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
+
+
+                pos1.start();
+                rot1.start();
+
+            }
+
+            //call the init function to run the code
+            init();
 
         </script>
     </div>
