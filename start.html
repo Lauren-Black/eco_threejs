@@ -85,7 +85,7 @@
         </div>
         <div id="inner">
 
-            <!--<input class="slide" type="range" min="0" max="4" step="2" value="0" oninput="showVal(this.value)">-->
+<!--            <input class="slide" type="range" min="0" max="4" step="2" value="0" oninput="showVal(this.value)">-->
             <a href="#" class="button" onclick="menu();">Menu</a>
             <a href="#" class="button" id="enter" onclick="enter();">Enter</a>
             <a href="#" class="button" onclick="floodTown();">Flood Town</a>
@@ -100,12 +100,14 @@
         <script src="js/OrbitControls.js"></script>
         <script src="js/tween.min.js"></script>
         <script>
-            var scene, camera, renderer, raycaster, material, illum, water, waterHt = 1,
+            var scene, camera, renderer, raycaster, material, illum, water, tornado, waterHt = 1,
                 lastVal = 0,
                 particles, particleCount, particleSystem;
             var textureLoader = new THREE.TextureLoader();
             var mouse = new THREE.Vector2(),
                 INTERSECTED;
+            var hexColour = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 'a', 'b', 'c', 'd', 'e', 'f'];
+            console.log(hexColour);
 
 
             function init() {
@@ -144,8 +146,16 @@
 
                 particleCount = 1500;
                 particles = new THREE.Geometry();
+                var colin = 0;
+                for (var i = 0; i < 6; i++) {
+                    var ranCol = Math.floor(Math.random() * 16);
+                    colin += hexColour[ranCol];
+                    console.log(colin);
+                    //                    var colour += colin;
+                }
+                //                console.log("colour is..." + colour);
                 var pMaterial1 = new THREE.PointsMaterial({
-                    color: 0xD60000,
+                    color: 0xD80000,
                     size: 3,
                     map: textureLoader.load("../img/flame.png"),
                     alphaTest: 0.3,
@@ -202,6 +212,14 @@
 
                     var water = dae.getObjectByName("water", true);
 
+                    var tornado = dae.getObjectByName("tornado", true);
+                    
+                    console.log(tornado);
+
+
+
+
+
 
                     //                var controls = new THREE.OrbitControls(camera, renderer.domElement);
                     //Fetch camera positions and orientation.
@@ -244,12 +262,10 @@
                         INTERSECTED.position.z += 1.5;
                     }
 
-                    if (INTERSECTED.parent.name == "tornado") {
-                        INTERSECTED.rotation.z += 0.5;
-                    }
-
                 }
             }
+
+
 
 
 
@@ -258,6 +274,8 @@
                 camera.updateProjectionMatrix();
                 renderer.setSize(window.innerWidth, window.innerHeight);
             });
+
+
 
             function render() {
                 //call to render scene 60fps
@@ -268,7 +286,12 @@
 
                 var orbit = Date.now() * 0.01;
 
+
+
                 TWEEN.update();
+
+
+//                tornado.rotation.y += -Math.PI / 2;
 
 
                 for (var i = 0; i < particleCount; i++) {
@@ -300,24 +323,24 @@
 
 
 
-            //            function showVal(val) {
-            // if (val != lastVal) {
-            // if (val > lastVal) {
-            // waterHt += 0.07;
-            // new TWEEN.Tween(water.scale).to({
-            // y: waterHt
-            // }, 800).easing(TWEEN.Easing.Quadratic.InOut).start();
-            // } else {
-            // waterHt -= 0.07;
-            // new TWEEN.Tween(water.scale).to({
-            // y: waterHt
-            // }, 800).easing(TWEEN.Easing.Quadratic.InOut).start();
-            //
-            // }
-            // lastVal = val;
-            // }
-            //
-            // }
+//            function showVal(val) {
+//                if (val != lastVal) {
+//                    if (val > lastVal) {
+//                        waterHt += 0.07;
+//                        new TWEEN.Tween(water.scale).to({
+//                            y: waterHt
+//                        }, 800).easing(TWEEN.Easing.Quadratic.InOut).start();
+//                    } else {
+//                        waterHt -= 0.07;
+//                        new TWEEN.Tween(water.scale).to({
+//                            y: waterHt
+//                        }, 800).easing(TWEEN.Easing.Quadratic.InOut).start();
+//
+//                    }
+//                    lastVal = val;
+//                }
+//
+//            }
 
             function menu() {
                 var pos1 = new TWEEN.Tween(camera.position).to({
