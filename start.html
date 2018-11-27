@@ -75,6 +75,25 @@
             border-radius: 50%;
         }
 
+        .fade-out {
+            opacity: 1;
+            animation-name: fadeOutOpacity;
+            animation-iteration-count: 1;
+            animation-timing-function: ease-in;
+            animation-duration: 1s;
+            animation-fill-mode: forwards;
+        }
+
+        @keyframes fadeOutOpacity {
+            0% {
+                opacity: 1;
+            }
+
+            100% {
+                opacity: 0;
+            }
+        }
+
     </style>
 </head>
 
@@ -85,7 +104,7 @@
         </div>
         <div id="inner">
 
-<!--            <input class="slide" type="range" min="0" max="4" step="2" value="0" oninput="showVal(this.value)">-->
+            <!--            <input class="slide" type="range" min="0" max="4" step="2" value="0" oninput="showVal(this.value)">-->
             <a href="#" class="button" onclick="menu();">Menu</a>
             <a href="#" class="button" id="enter" onclick="enter();">Enter</a>
             <a href="#" class="button" onclick="floodTown();">Flood Town</a>
@@ -164,7 +183,7 @@
                 });
 
                 var pMaterial2 = new THREE.PointsMaterial({
-                    color: 0xF4870F,
+                    color: 0xfff,
                     size: 3,
                     map: textureLoader.load("../img/flame.png"),
                     alphaTest: 0.3,
@@ -213,7 +232,7 @@
                     var water = dae.getObjectByName("water", true);
 
                     var tornado = dae.getObjectByName("tornado", true);
-                    
+
                     console.log(tornado);
 
 
@@ -291,7 +310,7 @@
                 TWEEN.update();
 
 
-//                tornado.rotation.y += -Math.PI / 2;
+                //                tornado.rotation.y += -Math.PI / 2;
 
 
                 for (var i = 0; i < particleCount; i++) {
@@ -323,24 +342,24 @@
 
 
 
-//            function showVal(val) {
-//                if (val != lastVal) {
-//                    if (val > lastVal) {
-//                        waterHt += 0.07;
-//                        new TWEEN.Tween(water.scale).to({
-//                            y: waterHt
-//                        }, 800).easing(TWEEN.Easing.Quadratic.InOut).start();
-//                    } else {
-//                        waterHt -= 0.07;
-//                        new TWEEN.Tween(water.scale).to({
-//                            y: waterHt
-//                        }, 800).easing(TWEEN.Easing.Quadratic.InOut).start();
-//
-//                    }
-//                    lastVal = val;
-//                }
-//
-//            }
+            //            function showVal(val) {
+            //                if (val != lastVal) {
+            //                    if (val > lastVal) {
+            //                        waterHt += 0.07;
+            //                        new TWEEN.Tween(water.scale).to({
+            //                            y: waterHt
+            //                        }, 800).easing(TWEEN.Easing.Quadratic.InOut).start();
+            //                    } else {
+            //                        waterHt -= 0.07;
+            //                        new TWEEN.Tween(water.scale).to({
+            //                            y: waterHt
+            //                        }, 800).easing(TWEEN.Easing.Quadratic.InOut).start();
+            //
+            //                    }
+            //                    lastVal = val;
+            //                }
+            //
+            //            }
 
             function menu() {
                 var pos1 = new TWEEN.Tween(camera.position).to({
