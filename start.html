@@ -47,7 +47,6 @@
             z-index: 100;
         }
 
-        enter {}
 
         .button {
             margin: 40px;
@@ -75,6 +74,89 @@
             border-radius: 50%;
         }
 
+        #info {
+            position: absolute;
+            top: 50%;
+            z-index: 101;
+            width: 100%;
+            visibility: hidden;
+        }
+
+        #infoBox {
+            margin: 0 auto;
+            width: 30%;
+            padding: 10px;
+            height: 100px;
+            background: rgba(255, 180, 255, 0.64);
+            border-radius: 5px;
+        }
+
+        #menuInfo {
+            visibility: hidden;
+        }
+
+        #enterInfo {
+            visibility: hidden;
+        }
+
+        #floodInfo {
+            visibility: hidden;
+        }
+
+        #forestInfo {
+            visibility: hidden;
+        }
+
+        #tornadoInfo {
+            visibility: hidden;
+        }
+
+        #smokeInfo {
+            visibility: hidden;
+        }
+
+        #renewableInfo {
+            visibility: hidden;
+        }
+
+        #menuButton {
+            visibility: hidden;
+        }
+
+        #enterButton {
+            visibility: hidden;
+        }
+
+        #floodButton {
+            visibility: hidden;
+        }
+
+        #forestButton {
+            visibility: hidden;
+        }
+
+        #tornadoButton {
+            visibility: hidden;
+        }
+
+        #smokeButton {
+            visibility: hidden;
+        }
+
+        #renewableButton {
+            visibility: hidden;
+        }
+
+        .infoBoxes {
+            position: absolute;
+            width: 30%;
+            text-align: center;
+            font-family: 'roboto'sans-serif;
+            font-size: 24;
+
+        }
+
+
         .fade-out {
             opacity: 1;
             animation-name: fadeOutOpacity;
@@ -94,6 +176,25 @@
             }
         }
 
+        .fade-in {
+            opacity: 1;
+            animation-name: fadeInOpacity;
+            animation-iteration-count: 1;
+            animation-timing-function: ease-in;
+            animation-duration: 2.5s;
+            animation-fill-mode: forwards;
+        }
+
+        @keyframes fadeInOpacity {
+            0% {
+                opacity: 0;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
     </style>
 </head>
 
@@ -102,16 +203,29 @@
         <div id="header">
             <img src="title.png" id="badge">
         </div>
+        <div id="info">
+            <div id="infoBox">
+                <div id="enterInfo" class="infoBoxes">
+                    <p>The increase of CO2 in our environment is causing serious changes to the Earth. These changes have our planet on a very dengerous trajectory.</p>
+                </div>
+                <div id="floodInfo" class="infoBoxes">
+                    <p>The increase in CO2 has caused the overall temperature of the planet to increase, which is causing ice bergs and ice caps to melt. This causes a dangerous rise in sea level.
+
+                        Move the slider to see the difference just a few
+                        degrees can make</p>
+                </div>
+            </div>
+        </div>
         <div id="inner">
 
             <!--            <input class="slide" type="range" min="0" max="4" step="2" value="0" oninput="showVal(this.value)">-->
-            <a href="#" class="button" onclick="menu();">Menu</a>
-            <a href="#" class="button" id="enter" onclick="enter();">Enter</a>
-            <a href="#" class="button" onclick="floodTown();">Flood Town</a>
-            <a href="#" class="button" onclick="forest();">Fire Forest</a>
-            <a href="#" class="button" onclick="tornadoTown();">Tornado Town</a>
-            <a href="#" class="button" onclick="smokeStack();">Smoke Stack</a>
-            <a href="#" class="button" onclick="renewableFarm();">Renewable Farm</a>
+            <a href="#" class="button" onclick="buttonCall('menu'); menu();">Menu</a>
+            <a href="#" class="button" onclick="buttonCall('enter'); enter();" id="enter">Enter</a>
+            <a href="#" class="button" onclick="buttonCall('floodTown'); floodTown();">Flood Town</a>
+            <a href="#" class="button" onclick="buttonCall('forest'); forest();">Fire Forest</a>
+            <a href="#" class="button" onclick="buttonCall('tornadoTown'); tornadoTown();">Tornado Town</a>
+            <a href="#" class="button" onclick="buttonCall('smokeStack'); smokeStack();">Smoke Stack</a>
+            <a href="#" class="button" onclick="buttonCall('renewableFarm'); renewableFarm();">Renewable Farm</a>
         </div>
         <script src="js/three.min.js"></script>
         <script src="js/Detector.js"></script>
@@ -122,6 +236,7 @@
             var scene, camera, renderer, raycaster, material, illum, water, tornado, waterHt = 1,
                 lastVal = 0,
                 particles, particleCount, particleSystem;
+            var locationFlag;
             var textureLoader = new THREE.TextureLoader();
             var mouse = new THREE.Vector2(),
                 INTERSECTED;
@@ -327,6 +442,7 @@
 
                 }
 
+
                 particles.verticesNeedUpdate = true;
 
                 //distance
@@ -337,31 +453,69 @@
                 //keep displaying scene
                 renderer.render(scene, camera);
             }
+            //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------- TARGETLOC STUFF --------------------------------------------------------------------------------------------------------------------------------
+            function buttonCall(targetLoc) {
+                // TEST ONLY - FADE TITLE WORK
+                // Fade out title work using CSS animation (See Style tag above)
+                if (targetLoc == "enter") {
+                    document.getElementById("header").className = 'fade-out';
+                    return;
+                } else if (targetLoc == "menu") {
+                    document.getElementById("header").className = 'fade-in';
+                    return;
+                }
+            }
+            //            if (locationFlag != targetLoc) { // make sure we're not already there
+            // locationFlag = targetLoc; // set current location flag
+            // if (targetLoc == "enterInfo") {
+            // enter();
+            // } else if (targetLoc == "floodInfo") {
+            // floodTown();
+            // } else if (targetLoc == "forestInfo") {
+            // forest();
+            // } else if (targetLoc == "tornadoInfo") {
+            // tornadoTown();
+            // } else if (targetLoc == "smokeInfo") {
+            // smokeStack();
+            // } else {
+            // renewableFarm();
+            // }
+            // }
+
+
+
+
 
 
 
 
 
             //            function showVal(val) {
-            //                if (val != lastVal) {
-            //                    if (val > lastVal) {
-            //                        waterHt += 0.07;
-            //                        new TWEEN.Tween(water.scale).to({
-            //                            y: waterHt
-            //                        }, 800).easing(TWEEN.Easing.Quadratic.InOut).start();
-            //                    } else {
-            //                        waterHt -= 0.07;
-            //                        new TWEEN.Tween(water.scale).to({
-            //                            y: waterHt
-            //                        }, 800).easing(TWEEN.Easing.Quadratic.InOut).start();
+            // if (val != lastVal) {
+            // if (val > lastVal) {
+            // waterHt += 0.07;
+            // new TWEEN.Tween(water.scale).to({
+            // y: waterHt
+            // }, 800).easing(TWEEN.Easing.Quadratic.InOut).start();
+            // } else {
+            // waterHt -= 0.07;
+            // new TWEEN.Tween(water.scale).to({
+            // y: waterHt
+            // }, 800).easing(TWEEN.Easing.Quadratic.InOut).start();
             //
-            //                    }
-            //                    lastVal = val;
-            //                }
+            // }
+            // lastVal = val;
+            // }
             //
-            //            }
+            // }
 
             function menu() {
+                console.log("Location called");
+
+                // Hide info boxes
+                document.getElementById("info").style.visibility = "hidden";
+
+                document.getElementById("menuInfo").style.visibility = "hidden";
                 var pos1 = new TWEEN.Tween(camera.position).to({
                     x: -130,
                     y: 220,
@@ -376,26 +530,41 @@
 
                 pos1.start();
                 rot1.start();
+
             }
 
             function enter() {
+                console.log("Location called");
+
+                // Hide info boxes
+                document.getElementById("info").style.visibility = "hidden";
+
+                document.getElementById("enterInfo").style.visibility = "hidden";
                 var pos1 = new TWEEN.Tween(camera.position).to({
                     x: -140,
                     y: 160,
                     z: 370
-                }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
+                }, 3000).easing(TWEEN.Easing.Quadratic.InOut);
                 var rot1 = new TWEEN.Tween(camera.rotation).to({
                     x: -.3,
                     y: -.22,
                     z: -.05
-                }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
+                }, 3000).easing(TWEEN.Easing.Quadratic.InOut);
 
 
                 pos1.start();
                 rot1.start();
+
+                //                displayInfo();
             }
 
             function floodTown() {
+                console.log("Location called");
+
+                // Hide info boxes
+                document.getElementById("info").style.visibility = "hidden";
+
+                document.getElementById("floodInfo").style.visibility = "hidden";
                 var pos1 = new TWEEN.Tween(camera.position).to({
                     x: -280,
                     y: 60,
@@ -410,9 +579,17 @@
 
                 pos1.start();
                 rot1.start();
+
+                //                displayInfo();
             }
 
             function forest() {
+                console.log("Location called");
+
+                // Hide info boxes
+                document.getElementById("info").style.visibility = "hidden";
+
+                document.getElementById("forestInfo").style.visibility = "hidden";
                 var pos1 = new TWEEN.Tween(camera.position).to({
                     x: -50,
                     y: 50,
@@ -427,9 +604,17 @@
 
                 pos1.start();
                 rot1.start();
+
+                //                displayInfo();
             }
 
             function tornadoTown() {
+                console.log("Location called");
+
+                // Hide info boxes
+                document.getElementById("info").style.visibility = "hidden";
+
+                document.getElementById("tornadoInfo").style.visibility = "hidden";
                 var pos1 = new TWEEN.Tween(camera.position).to({
                     x: 160,
                     y: 45,
@@ -445,9 +630,17 @@
                 pos1.start();
                 rot1.start();
 
+                displayInfo();
+
             }
 
             function smokeStack() {
+                console.log("Location called");
+
+                // Hide info boxes
+                document.getElementById("info").style.visibility = "hidden";
+
+                document.getElementById("smokeInfo").style.visibility = "hidden";
                 var pos1 = new TWEEN.Tween(camera.position).to({
                     x: 110,
                     y: 50,
@@ -463,9 +656,17 @@
                 pos1.start();
                 rot1.start();
 
+                //                displayInfo();
+
             }
 
             function renewableFarm() {
+                console.log("Location called");
+
+                // Hide info boxes
+                document.getElementById("info").style.visibility = "hidden";
+
+                document.getElementById("renewableInfo").style.visibility = "hidden";
                 var pos1 = new TWEEN.Tween(camera.position).to({
                     x: 45,
                     y: 50,
@@ -481,7 +682,14 @@
                 pos1.start();
                 rot1.start();
 
+                //                displayInfo();
+
             }
+
+            //            function displayInfo() {
+            // document.getElementById("info").style.visibility = "visible";
+            // document.getElementById(locationFlag).style.visibility = "visible";
+            // }
 
             //call the init function to run the code
             init();
