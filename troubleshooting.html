@@ -75,13 +75,14 @@
             visibility: hidden;
         }
 
-        #infoBox {
+        ##infoBox {
             margin: 0 auto;
             width: 30%;
             padding: 10px;
-            height: 100px;
-            background: rgba(255, 180, 255, 0.64);
+            height: 100%;
+            background: rgba(255, 255, 255, 0.64);
             border-radius: 5px;
+            font-size: 1.1em
         }
 
         #menuInfo,
@@ -171,389 +172,439 @@
             <img src="title.png" id="badge">
         </div>
         <div id="info">
-            <div id="infoBox">
-                <div id="enterInfo" class="infoBoxes">
-                    <p>The increase of CO2 in our environment is causing serious changes to the Earth. These changes have our planet on a very dengerous trajectory.</p>
-                </div>
-                <div id="floodInfo" class="infoBoxes">
-                    <p>The increase in CO2 has caused the overall temperature of the planet to increase, which is causing ice bergs and ice caps to melt. This causes a dangerous rise in sea level.
 
-                        Move the slider to see the difference just a few
-                        degrees can make</p>
-                </div>
+            <div id="infoBox">
+                <p>Dynamically update info here</p>
+                <!--
+    <div id="enterInfo" class="infoBoxes">
+        <p>The increase of CO2 in our environment is causing serious changes to the Earth. These changes have our planet on a very dengerous trajectory.</p>
+    </div>
+    <div id="floodInfo" class="infoBoxes">
+        <p>The increase in CO2 has caused the overall temperature of the planet to increase, which is causing ice bergs and ice caps to melt. This causes a dangerous rise in sea level.
+
+            Move the slider to see the difference just a few
+            degrees can make</p>
+-->
             </div>
         </div>
-        <div id="inner">
 
-            <!--            <input class="slide" type="range" min="0" max="4" step="2" value="0" oninput="showVal(this.value)">-->
-            <a href="#" class="button" onclick="buttonCall('menu');">Menu</a>
-            <a href="#" class="button" onclick="buttonCall('enter');" id="enter">Enter</a>
-            <a href="#" class="button" onclick="buttonCall('floodTown');">Flood Town</a>
-            <a href="#" class="button" onclick="buttonCall('forest');">Fire Forest</a>
-            <a href="#" class="button" onclick="buttonCall('tornadoTown');">Tornado Town</a>
-            <a href="#" class="button" onclick="buttonCall('smokeStack');">Smoke Stack</a>
-            <a href="#" class="button" onclick="buttonCall('renewableFarm');">Renewable Farm</a>
-        </div>
-        <script src="js/three.min.js"></script>
-        <script src="js/Detector.js"></script>
-        <script src="js/ColladaLoader.js"></script>
-        <script src="js/OrbitControls.js"></script>
-        <script src="js/tween.min.js"></script>
-        <script>
-            var scene, camera, renderer, raycaster, material, illum, water, tornado, waterHt = 1,
-                lastVal = 0,
-                particles, particleCount, particleSystem;
-            var locationFlag;
-            var textureLoader = new THREE.TextureLoader();
-            var mouse = new THREE.Vector2(),
-                INTERSECTED;
-            var hexColour = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 'a', 'b', 'c', 'd', 'e', 'f'];
-            console.log(hexColour);
-
-            function init() {
-                illum = false;
-                //add detector to see if WebGL is supported
-                if (!Detector.webgl) Detector.addGetWebGLMessage();
-                //set up a scene
-                scene = new THREE.Scene();
-                //add a camera
-                camera = new THREE.PerspectiveCamera(35, window.innerWidth / window.innerHeight, 0.1, 1000);
-                //render the scene - start renderer and set it's size
-                renderer = new THREE.WebGLRenderer({
-                    antialias: true,
-                    alpha: true
-                });
-                renderer.setSize(window.innerWidth, window.innerHeight);
-                renderer.setClearColor(0x000000, 0.0);
-                renderer.shadowMap.enabled = true;
-                renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-                //add to webpage
-                document.body.appendChild(renderer.domElement);
-                var backlight = new THREE.DirectionalLight(0xffffff, 1.5);
-                backlight.position.set(-10, 20, -10).normalize();
-                backlight.intensity = 1.2;
-                scene.add(backlight);
-                var frontlight = new THREE.DirectionalLight(0xffffff, 1.5);
-                frontlight.position.set(6, 15, 15).normalize();
-                frontlight.intensity = 1;
-                scene.add(frontlight);
-                particleCount = 1500;
-                particles = new THREE.Geometry();
-                var colin = 0;
-                for (var i = 0; i < 6; i++) {
-                    var ranCol = Math.floor(Math.random() * 16);
-                    colin += hexColour[ranCol];
-                    console.log(colin);
-                    //                    var colour += colin;
-                }
-                //                console.log("colour is..." + colour);
-                var pMaterial1 = new THREE.PointsMaterial({
-                    color: 0xD80000,
-                    size: 3,
-                    map: textureLoader.load("../img/flame1.png"),
-                    alphaTest: 0.3,
-                    opacity: 0.9,
-                    transparent: true
-                });
-                var pMaterial2 = new THREE.PointsMaterial({
-                    color: 0xfff,
-                    size: 3,
-                    map: textureLoader.load("../img/flame.png"),
-                    alphaTest: 0.3,
-                    opacity: 0.9,
-                    transparent: true
-                });
-                for (var i = 0; i < particleCount; i++) {
-                    var pX = Math.random() * 50 - 10,
-                        pY = 10,
-                        pZ = Math.random() * 80 - 180;
-                    var particle = new THREE.Vector3(pX, pY, pZ);
-                    particle.velocity = new THREE.Vector3(0, (Math.random() * 0.9), 0);
-                    particles.vertices.push(particle);
-                }
-                particleSystem = new THREE.Points(particles, pMaterial1, pMaterial2);
-                particleSystem.sortParticles = true;
-                scene.add(particleSystem);
-                var loader = new THREE.ColladaLoader();
-                loader.options.convertUpAxis = true;
-                loader.load('newislandex4d.dae', function(collada) {
-                    var dae = collada.scene;
-                    dae.traverse(function(child) {
-                        if (child instanceof THREE.Mesh) {
-                            child.castShadow = true;
-                            child.receiveShadow = true;
-                        }
-                    });
-                    dae.scale.x = dae.scale.y = dae.scale.z = 10;
-                    dae.updateMatrix();
-                    scene.add(dae);
-                    water = dae.getObjectByName("water", true);
-                    tornado = dae.getObjectByName("tornado", true);
-                    console.log(tornado);
-                    //                var controls = new THREE.OrbitControls(camera, renderer.domElement);
-                    //Fetch camera positions and orientation.
-                    //                    window.addEventListener('click', function() {
-                    // console.log(camera.position);
-                    //
-                    // })
-                    render();
-                });
-                //position camera
-                camera.position.set(-130, 220, 470);
-                camera.rotation.x = 1;
-                camera.rotation.y = -.22;
-                camera.rotation.z = -.05;
-                raycaster = new THREE.Raycaster();
-                document.addEventListener('mousemove', onDocumentMouseMove, false);
-                //render the scene
-                //render();
-            }
-
-            function onDocumentMouseMove(event) {
-                event.preventDefault();
-                mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-                mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-            }
-            document.onmousedown = function(e) {
-                raycaster.setFromCamera(mouse, camera);
-                var intersects = raycaster.intersectObjects(scene.children, true);
-                if (intersects.length > 0) {
-                    INTERSECTED = intersects[0].object;
-                    if (INTERSECTED.parent.name == "water") {
-                        INTERSECTED.position.z += 1.5;
-                    }
-                }
-            }
-            window.addEventListener("resize", () => {
-                camera.aspect = window.innerWidth / window.innerHeight;
-                camera.updateProjectionMatrix();
-                renderer.setSize(window.innerWidth, window.innerHeight);
-            });
-
-            function render() {
-                //call to render scene 60fps
-                requestAnimationFrame(render);
-                //            camera.lookAt(scene.position);
-                //speed
-                var timer = Date.now() * 0.0001;
-                var orbit = Date.now() * 0.01;
-                TWEEN.update();
-                tornado.rotation.z += 0.1;
-                for (var i = 0; i < particleCount; i++) {
-                    var ptcl = particles.vertices[i];
-                    //check if its above level and if so reset
-                    if (ptcl.y > 80) {
-                        ptcl.y = 10;
-                        ptcl.velocity.y = (Math.random() * 0.5);
-                    }
-                    ptcl.velocity.y += Math.random() * 0.001;
-                    ptcl.add(ptcl.velocity);
-                }
-                particles.verticesNeedUpdate = true;
-                //distance
-                //camera.position.x = Math.cos(timer) * 250;
-                //camera.position.z = Math.sin(timer) * 250;
-                //camera.lookAt(scene.position);
-                //keep displaying scene
-                renderer.render(scene, camera);
-            }
-            //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------- TARGETLOC STUFF --------------------------------------------------------------------------------------------------------------------------------
-            function buttonCall(targetLoc) {
-                console.log("targetloc = " + targetLoc);
-                // TEST ONLY - FADE TITLE WORK
-                // Fade out title work using CSS animation (See Style tag above)
-
-                if (locationFlag != targetLoc) { // make sure we're not already there
-                    locationFlag = targetLoc; // set current location flag
-                    if (targetLoc == "menu") {
-                        document.getElementById("header").className = 'fade-in';
-                    } else if (targetLoc == "enter") {
-                        document.getElementById("infoBox").className = 'delay';
-                        document.getElementById("header").className = 'fade-out';
-
-                        enter();
-                    } else if (targetLoc == "floodTown") {
-                        console.log("hello!");
-                        floodTown();
-                    } else if (targetLoc == "forest") {
-                        console.log("hello!!!!");
-                        forest();
-                    } else if (targetLoc == "tornadoTown") {
-                        tornadoTown();
-                    } else if (targetLoc == "smokeStack") {
-                        smokeStack();
-                    } else {
-                        renewableFarm();
-                    }
-                }
-            }
-
-            //            function showVal(val) {
-            // if (val != lastVal) {
-            // if (val > lastVal) {
-            // waterHt += 0.07;
-            // new TWEEN.Tween(water.scale).to({
-            // y: waterHt
-            // }, 800).easing(TWEEN.Easing.Quadratic.InOut).start();
-            // } else {
-            // waterHt -= 0.07;
-            // new TWEEN.Tween(water.scale).to({
-            // y: waterHt
-            // }, 800).easing(TWEEN.Easing.Quadratic.InOut).start();
-            //
-            // }
-            // lastVal = val;
-            // }
-            //
-            // }
-            function menu() {
-                console.log("Location called");
-                // Hide info boxes
-                document.getElementById("info").style.visibility = "hidden";
-                document.getElementById("menuInfo").style.visibility = "hidden";
-                var pos1 = new TWEEN.Tween(camera.position).to({
-                    x: -130,
-                    y: 220,
-                    z: 470
-                }, 2000).easing(TWEEN.Easing.Quadratic.InOut);
-                var rot1 = new TWEEN.Tween(camera.rotation).to({
-                    x: 1,
-                    y: -.22,
-                    z: -.05
-                }, 2000).easing(TWEEN.Easing.Quadratic.InOut);
-                pos1.start();
-                rot1.start();
-            }
-
-            function enter() {
-                console.log("Location called");
-                // Hide info boxes
-                document.getElementById("info").style.visibility = "hidden";
-                document.getElementById("enterInfo").style.visibility = "hidden";
-                var pos1 = new TWEEN.Tween(camera.position).to({
-                    x: -140,
-                    y: 160,
-                    z: 370
-                }, 3000).easing(TWEEN.Easing.Quadratic.InOut);
-                var rot1 = new TWEEN.Tween(camera.rotation).to({
-                    x: -.3,
-                    y: -.22,
-                    z: -.05
-                }, 3000).easing(TWEEN.Easing.Quadratic.InOut);
-                pos1.start();
-                rot1.start();
-                displayInfo();
-            }
-
-            function floodTown() {
-                console.log("Location called");
-                // Hide info boxes
-                document.getElementById("info").style.visibility = "hidden";
-                document.getElementById("floodInfo").style.visibility = "hidden";
-                var pos1 = new TWEEN.Tween(camera.position).to({
-                    x: -280,
-                    y: 60,
-                    z: 50
-                }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
-                var rot1 = new TWEEN.Tween(camera.rotation).to({
-                    x: -.4,
-                    y: -.6,
-                    z: -.15
-                }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
-                pos1.start();
-                rot1.start();
-                displayInfo();
-            }
-
-            function forest() {
-                console.log("Location called");
-                // Hide info boxes
-                document.getElementById("info").style.visibility = "hidden";
-                //                document.getElementById("forestInfo").style.visibility = "hidden";
-                var pos1 = new TWEEN.Tween(camera.position).to({
-                    x: -50,
-                    y: 50,
-                    z: -50
-                }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
-                var rot1 = new TWEEN.Tween(camera.rotation).to({
-                    x: -.08,
-                    y: -.5,
-                    z: -.02
-                }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
-                pos1.start();
-                rot1.start();
-                displayInfo();
-            }
-
-            function tornadoTown() {
-                console.log("Location called");
-                // Hide info boxes
-                document.getElementById("info").style.visibility = "hidden";
-                document.getElementById("tornadoInfo").style.visibility = "hidden";
-                var pos1 = new TWEEN.Tween(camera.position).to({
-                    x: 160,
-                    y: 45,
-                    z: 0
-                }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
-                var rot1 = new TWEEN.Tween(camera.rotation).to({
-                    x: -.04,
-                    y: -.15,
-                    z: -.05
-                }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
-                pos1.start();
-                rot1.start();
-                displayInfo();
-            }
-
-            function smokeStack() {
-                console.log("Location called");
-                // Hide info boxes
-                document.getElementById("info").style.visibility = "hidden";
-                document.getElementById("smokeInfo").style.visibility = "hidden";
-                var pos1 = new TWEEN.Tween(camera.position).to({
-                    x: 110,
-                    y: 50,
-                    z: -30
-                }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
-                var rot1 = new TWEEN.Tween(camera.rotation).to({
-                    x: 0.04,
-                    y: -1.75,
-                    z: 0
-                }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
-                pos1.start();
-                rot1.start();
-                displayInfo();
-            }
-
-            function renewableFarm() {
-                console.log("Location called");
-                // Hide info boxes
-                document.getElementById("info").style.visibility = "hidden";
-                //                document.getElementById("renewableInfo").style.visibility = "hidden";
-                var pos1 = new TWEEN.Tween(camera.position).to({
-                    x: 45,
-                    y: 50,
-                    z: -30
-                }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
-                var rot1 = new TWEEN.Tween(camera.rotation).to({
-                    x: 0.04,
-                    y: -3.35,
-                    z: 0.05
-                }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
-                pos1.start();
-                rot1.start();
-                displayInfo();
-            }
-
-            function displayInfo() {
-                document.getElementById("info").style.visibility = "visible";
-                console.log("location flag = " + locationFlag);
-                document.getElementById(locationFlag).style.visibility = "visible";
-            }
-            //call the init function to run the code
-            init();
-        </script>
     </div>
+    <div id="inner">
+
+        <!--            <input class="slide" type="range" min="0" max="4" step="2" value="0" oninput="showVal(this.value)">-->
+        <a href="#" class="button" onclick="buttonCall('menu');">Menu</a>
+        <a href="#" class="button" onclick="buttonCall('enter');" id="enter">Enter</a>
+        <a href="#" class="button" onclick="buttonCall('floodTown');">Flood Town</a>
+        <a href="#" class="button" onclick="buttonCall('forest');">Fire Forest</a>
+        <a href="#" class="button" onclick="buttonCall('tornadoTown');">Tornado Town</a>
+        <a href="#" class="button" onclick="buttonCall('smokeStack');">Smoke Stack</a>
+        <a href="#" class="button" onclick="buttonCall('renewableFarm');">Renewable Farm</a>
+    </div>
+    <script src="js/three.min.js"></script>
+    <script src="js/Detector.js"></script>
+    <script src="js/ColladaLoader.js"></script>
+    <script src="js/OrbitControls.js"></script>
+    <script src="js/tween.min.js"></script>
+    <script>
+        var scene, camera, renderer, raycaster, material, illum, water, tornado, waterHt = 1,
+            lastVal = 0,
+            particles, particleCount, particleSystem;
+        var locationFlag, infoElement;
+        var textureLoader = new THREE.TextureLoader();
+        var mouse = new THREE.Vector2(),
+            INTERSECTED;
+        var hexColour = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 'a', 'b', 'c', 'd', 'e', 'f'];
+        console.log(hexColour);
+
+        function init() {
+            illum = false;
+            //add detector to see if WebGL is supported
+            if (!Detector.webgl) Detector.addGetWebGLMessage();
+            //set up a scene
+            scene = new THREE.Scene();
+            //add a camera
+            camera = new THREE.PerspectiveCamera(35, window.innerWidth / window.innerHeight, 0.1, 1000);
+            //render the scene - start renderer and set it's size
+            renderer = new THREE.WebGLRenderer({
+                antialias: true,
+                alpha: true
+            });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setClearColor(0x000000, 0.0);
+            renderer.shadowMap.enabled = true;
+            renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+            //add to webpage
+            document.body.appendChild(renderer.domElement);
+            var backlight = new THREE.DirectionalLight(0xffffff, 1.5);
+            backlight.position.set(-10, 20, -10).normalize();
+            backlight.intensity = 1.2;
+            scene.add(backlight);
+            var frontlight = new THREE.DirectionalLight(0xffffff, 1.5);
+            frontlight.position.set(6, 15, 15).normalize();
+            frontlight.intensity = 1;
+            scene.add(frontlight);
+            particleCount = 1500;
+            particles = new THREE.Geometry();
+            var colin = 0;
+            for (var i = 0; i < 6; i++) {
+                var ranCol = Math.floor(Math.random() * 16);
+                colin += hexColour[ranCol];
+                console.log(colin);
+                //                    var colour += colin;
+            }
+            //                console.log("colour is..." + colour);
+            var pMaterial1 = new THREE.PointsMaterial({
+                color: 0xD80000,
+                size: 3,
+                map: textureLoader.load("../img/flame1.png"),
+                alphaTest: 0.3,
+                opacity: 0.9,
+                transparent: true
+            });
+            var pMaterial2 = new THREE.PointsMaterial({
+                color: 0xfff,
+                size: 3,
+                map: textureLoader.load("../img/flame.png"),
+                alphaTest: 0.3,
+                opacity: 0.9,
+                transparent: true
+            });
+            for (var i = 0; i < particleCount; i++) {
+                var pX = Math.random() * 50 - 10,
+                    pY = 10,
+                    pZ = Math.random() * 80 - 180;
+                var particle = new THREE.Vector3(pX, pY, pZ);
+                particle.velocity = new THREE.Vector3(0, (Math.random() * 0.9), 0);
+                particles.vertices.push(particle);
+            }
+            particleSystem = new THREE.Points(particles, pMaterial1, pMaterial2);
+            particleSystem.sortParticles = true;
+            scene.add(particleSystem);
+            var loader = new THREE.ColladaLoader();
+            loader.options.convertUpAxis = true;
+            loader.load('newislandex4d.dae', function(collada) {
+                var dae = collada.scene;
+                dae.traverse(function(child) {
+                    if (child instanceof THREE.Mesh) {
+                        child.castShadow = true;
+                        child.receiveShadow = true;
+                    }
+                });
+                dae.scale.x = dae.scale.y = dae.scale.z = 10;
+                dae.updateMatrix();
+                scene.add(dae);
+                water = dae.getObjectByName("water", true);
+                tornado = dae.getObjectByName("tornado", true);
+                console.log(tornado);
+                //                var controls = new THREE.OrbitControls(camera, renderer.domElement);
+                //Fetch camera positions and orientation.
+                //                    window.addEventListener('click', function() {
+                // console.log(camera.position);
+                //
+                // })
+                render();
+            });
+            //position camera
+            camera.position.set(-130, 220, 470);
+            camera.rotation.x = 1;
+            camera.rotation.y = -.22;
+            camera.rotation.z = -.05;
+            raycaster = new THREE.Raycaster();
+            document.addEventListener('mousemove', onDocumentMouseMove, false);
+            //render the scene
+            //render();
+        }
+
+        function onDocumentMouseMove(event) {
+            event.preventDefault();
+            mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+            mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+        }
+        document.onmousedown = function(e) {
+            raycaster.setFromCamera(mouse, camera);
+            var intersects = raycaster.intersectObjects(scene.children, true);
+            if (intersects.length > 0) {
+                INTERSECTED = intersects[0].object;
+                if (INTERSECTED.parent.name == "water") {
+                    INTERSECTED.position.z += 1.5;
+                }
+            }
+        }
+        window.addEventListener("resize", () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        function render() {
+            //call to render scene 60fps
+            requestAnimationFrame(render);
+            //            camera.lookAt(scene.position);
+            //speed
+            var timer = Date.now() * 0.0001;
+            var orbit = Date.now() * 0.01;
+            TWEEN.update();
+            tornado.rotation.z += 0.1;
+            for (var i = 0; i < particleCount; i++) {
+                var ptcl = particles.vertices[i];
+                //check if its above level and if so reset
+                if (ptcl.y > 80) {
+                    ptcl.y = 10;
+                    ptcl.velocity.y = (Math.random() * 0.5);
+                }
+                ptcl.velocity.y += Math.random() * 0.001;
+                ptcl.add(ptcl.velocity);
+            }
+            particles.verticesNeedUpdate = true;
+            //distance
+            //camera.position.x = Math.cos(timer) * 250;
+            //camera.position.z = Math.sin(timer) * 250;
+            //camera.lookAt(scene.position);
+            //keep displaying scene
+            renderer.render(scene, camera);
+        }
+        //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------- TARGETLOC STUFF --------------------------------------------------------------------------------------------------------------------------------
+        //            function buttonCall(targetLoc) {
+        // console.log("targetloc = " + targetLoc);
+        // TEST ONLY - FADE TITLE WORK
+        // Fade out title work using CSS animation (See Style tag above)
+
+        //                               if (locationFlag != targetLoc) { // make sure we're not already there
+        // locationFlag = targetLoc; // set current location flag
+        // if (targetLoc == "menu") {
+        // document.getElementById("header").className = 'fade-in';
+        // } else if (targetLoc == "enter") {
+        // // document.getElementById("infoBox").className = 'delay';
+        // document.getElementById("header").className = 'fade-out';
+        //
+        // enter();
+        // } else if (targetLoc == "floodTown") {
+        // console.log("hello!");
+        // floodTown();
+        // } else if (targetLoc == "forest") {
+        // console.log("hello!!!!");
+        // forest();
+        // } else if (targetLoc == "tornadoTown") {
+        // tornadoTown();
+        // } else if (targetLoc == "smokeStack") {
+        // smokeStack();
+        // } else {
+        // renewableFarm();
+        // }
+        // }
+        // }
+        function buttonCall(targetLoc) {
+            // Fade out title work using CSS animation (See Style tag above)
+            if (targetLoc == "title") {
+                document.getElementById("header").className = 'fade-out';
+                return;
+            }
+
+            // Move Camera to new location
+            if (locationFlag != targetLoc) { // make sure we're not already there
+                locationFlag = targetLoc; // set current location flag
+                if (targetLoc == "menu") {
+                    document.getElementById("header").className = 'fade-in';
+                } else if (targetLoc == "enter") {
+                    //                        document.getElementById("infoBox").className = 'delay';
+                    document.getElementById("header").className = 'fade-out';
+
+                    enter();
+                } else if (targetLoc == "floodTown") {
+                    console.log("hello!");
+                    floodTown();
+                } else if (targetLoc == "forest") {
+                    console.log("hello!!!!");
+                    forest();
+                } else if (targetLoc == "tornadoTown") {
+                    tornadoTown();
+                } else if (targetLoc == "smokeStack") {
+                    smokeStack();
+                } else {
+                    renewableFarm();
+                }
+            } else {
+                console.log("already there");
+            }
+
+        }
+
+        //            function showVal(val) {
+        // if (val != lastVal) {
+        // if (val > lastVal) {
+        // waterHt += 0.07;
+        // new TWEEN.Tween(water.scale).to({
+        // y: waterHt
+        // }, 800).easing(TWEEN.Easing.Quadratic.InOut).start();
+        // } else {
+        // waterHt -= 0.07;
+        // new TWEEN.Tween(water.scale).to({
+        // y: waterHt
+        // }, 800).easing(TWEEN.Easing.Quadratic.InOut).start();
+        //
+        // }
+        // lastVal = val;
+        // }
+        //
+        // }
+        function menu() {
+            console.log("Location called");
+            // Hide info boxes
+            document.getElementById("info").style.visibility = "hidden";
+            var pos1 = new TWEEN.Tween(camera.position).to({
+                x: -130,
+                y: 220,
+                z: 470
+            }, 2000).easing(TWEEN.Easing.Quadratic.InOut);
+            var rot1 = new TWEEN.Tween(camera.rotation).to({
+                x: 1,
+                y: -.22,
+                z: -.05
+            }, 2000).easing(TWEEN.Easing.Quadratic.InOut);
+            pos1.start();
+            rot1.start();
+        }
+
+        function enter() {
+            console.log("Location called");
+            // Hide info boxes
+            document.getElementById("info").style.visibility = "hidden";
+            //                document.getElementById("enterInfo").style.visibility = "hidden";
+            var pos1 = new TWEEN.Tween(camera.position).to({
+                x: -140,
+                y: 160,
+                z: 370
+            }, 3000).easing(TWEEN.Easing.Quadratic.InOut);
+            var rot1 = new TWEEN.Tween(camera.rotation).to({
+                x: -.3,
+                y: -.22,
+                z: -.05
+            }, 3000).easing(TWEEN.Easing.Quadratic.InOut);
+            pos1.start();
+            rot1.start();
+            displayInfo();
+        }
+
+        function floodTown() {
+            console.log("Location called");
+            // Hide info boxes
+            document.getElementById("info").style.visibility = "hidden";
+            //                document.getElementById("floodInfo").style.visibility = "hidden";
+            //                console.log("flood info =" + floodInfo);
+            var pos1 = new TWEEN.Tween(camera.position).to({
+                x: -280,
+                y: 60,
+                z: 50
+            }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
+            var rot1 = new TWEEN.Tween(camera.rotation).to({
+                x: -.4,
+                y: -.6,
+                z: -.15
+            }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
+            pos1.start();
+            rot1.start();
+            displayInfo();
+        }
+
+        function forest() {
+            console.log("Location called");
+            // Hide info boxes
+            document.getElementById("info").style.visibility = "hidden";
+            //                document.getElementById("forestInfo").style.visibility = "hidden";
+            var pos1 = new TWEEN.Tween(camera.position).to({
+                x: -50,
+                y: 50,
+                z: -50
+            }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
+            var rot1 = new TWEEN.Tween(camera.rotation).to({
+                x: -.08,
+                y: -.5,
+                z: -.02
+            }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
+            pos1.start();
+            rot1.start();
+            displayInfo();
+        }
+
+        function tornadoTown() {
+            console.log("Location called");
+            // Hide info boxes
+            document.getElementById("info").style.visibility = "hidden";
+            //                document.getElementById("tornadoInfo").style.visibility = "hidden";
+            var pos1 = new TWEEN.Tween(camera.position).to({
+                x: 160,
+                y: 45,
+                z: 0
+            }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
+            var rot1 = new TWEEN.Tween(camera.rotation).to({
+                x: -.04,
+                y: -.15,
+                z: -.05
+            }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
+            pos1.start();
+            rot1.start();
+            displayInfo();
+        }
+
+        function smokeStack() {
+            console.log("Location called");
+            // Hide info boxes
+            document.getElementById("info").style.visibility = "hidden";
+            //                document.getElementById("smokeInfo").style.visibility = "hidden";
+            var pos1 = new TWEEN.Tween(camera.position).to({
+                x: 110,
+                y: 50,
+                z: -30
+            }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
+            var rot1 = new TWEEN.Tween(camera.rotation).to({
+                x: 0.04,
+                y: -1.75,
+                z: 0
+            }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
+            pos1.start();
+            rot1.start();
+            displayInfo();
+        }
+
+        function renewableFarm() {
+            console.log("Location called");
+            // Hide info boxes
+            document.getElementById("info").style.visibility = "hidden";
+            //                                document.getElementById("renewableInfo").style.visibility = "hidden";
+            var pos1 = new TWEEN.Tween(camera.position).to({
+                x: 45,
+                y: 50,
+                z: -30
+            }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
+            var rot1 = new TWEEN.Tween(camera.rotation).to({
+                x: 0.04,
+                y: -3.35,
+                z: 0.05
+            }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
+            pos1.start();
+            rot1.start();
+            displayInfo();
+        }
+
+        function displayInfo() {
+            //            document.getElementById("info").className = 'fade-in';
+            switch (locationFlag) {
+
+                case "enter":
+                    console.log("innerHTML =" + innerHTML);
+                    infoElement.innerHTML = "<p>To introduce you to our little scene, this text has been displayed without fanfair or spectacle of any kind.<br>Enjoy!</p>"
+                    break;
+                case "floodTown":
+                    infoElement.innerHTML = "<p>The city was loud and dark. The smog had closed in and the people could no longer breath.<br>Sirens in the night echoed the wailing of the masses as the smog enveloped them in it's dark, dank cloak of dispair.</p>";
+                    break;
+                case "forest":
+                    infoElement.innerHTML = "<p>The farmlands were quiet and bright.<br>The air was clean and everyone breathed a sigh of relieve.<br>Even the cows were happy which is saying a lot given that they live nextdoor to the pigpen. The pigs were always happy because they knew  that they were the smartest animals on the land.</p>";
+                    break;
+            }
+        }
+        //call the init function to run the code
+        init();
+    </script>
 </body>
 
 </html>
