@@ -163,6 +163,7 @@
                 opacity: 1;
             }
         }
+
     </style>
 </head>
 
@@ -174,17 +175,7 @@
         <div id="info">
 
             <div id="infoBox">
-                <p>Dynamically update info here</p>
-                <!--
-    <div id="enterInfo" class="infoBoxes">
-        <p>The increase of CO2 in our environment is causing serious changes to the Earth. These changes have our planet on a very dengerous trajectory.</p>
-    </div>
-    <div id="floodInfo" class="infoBoxes">
-        <p>The increase in CO2 has caused the overall temperature of the planet to increase, which is causing ice bergs and ice caps to melt. This causes a dangerous rise in sea level.
-
-            Move the slider to see the difference just a few
-            degrees can make</p>
--->
+                <p>Dynamic text here</p>
             </div>
         </div>
 
@@ -209,7 +200,8 @@
         var scene, camera, renderer, raycaster, material, illum, water, tornado, waterHt = 1,
             lastVal = 0,
             particles, particleCount, particleSystem;
-        var locationFlag, infoElement;
+        var locationFlag,
+            infoElement;
         var textureLoader = new THREE.TextureLoader();
         var mouse = new THREE.Vector2(),
             INTERSECTED;
@@ -217,6 +209,8 @@
         console.log(hexColour);
 
         function init() {
+            infoElement = document.getElementById("infoBox");
+
             illum = false;
             //add detector to see if WebGL is supported
             if (!Detector.webgl) Detector.addGetWebGLMessage();
@@ -588,11 +582,12 @@
 
         function displayInfo() {
             //            document.getElementById("info").className = 'fade-in';
+            console.log("location flag =" + locationFlag);
             switch (locationFlag) {
-
                 case "enter":
-                    console.log("innerHTML =" + innerHTML);
                     infoElement.innerHTML = "<p>To introduce you to our little scene, this text has been displayed without fanfair or spectacle of any kind.<br>Enjoy!</p>"
+                    console.log("innerHTML =" + innerHTML);
+
                     break;
                 case "floodTown":
                     infoElement.innerHTML = "<p>The city was loud and dark. The smog had closed in and the people could no longer breath.<br>Sirens in the night echoed the wailing of the masses as the smog enveloped them in it's dark, dank cloak of dispair.</p>";
@@ -604,6 +599,7 @@
         }
         //call the init function to run the code
         init();
+
     </script>
 </body>
 
