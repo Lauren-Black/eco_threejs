@@ -72,28 +72,41 @@
             right: 20%;
             z-index: 101;
             width: 100%;
-            visibility: hidden;
+            /*            visibility: hidden;*/
         }
 
-        ##infoBox {
+        #infoBox {
             margin: 0 auto;
             width: 30%;
             padding: 10px;
             height: 100%;
             background: rgba(255, 255, 255, 0.64);
             border-radius: 5px;
-            font-size: 1.1em
+            font-size: 1.1em;
+            opacity: 0;
         }
 
         #menuInfo,
-        enterInfo,
-        floodInfo,
-        forestInfo,
-        tornadoInfo,
-        smokeInfo,
-        renewableInfo {
+        #enterInfo,
+        #floodInfo,
+        #forestInfo,
+        #tornadoInfo,
+        #smokeInfo,
+        #renewableInfo {
             visibility: hidden;
         }
+        
+/*
+        #menub,
+        #floodb,
+        #forestb,
+        #tornadob,
+        #smokeb,
+        #renewableb {
+            visibility: hidden;
+            opacity: 0;
+        }
+*/
 
 
 
@@ -183,13 +196,13 @@
     <div id="inner">
 
         <!--            <input class="slide" type="range" min="0" max="4" step="2" value="0" oninput="showVal(this.value)">-->
-        <a href="#" class="button" onclick="buttonCall('menu');">Menu</a>
-        <a href="#" class="button" onclick="buttonCall('enter');" id="enter">Enter</a>
-        <a href="#" class="button" onclick="buttonCall('floodTown');">Flood Town</a>
-        <a href="#" class="button" onclick="buttonCall('forest');">Fire Forest</a>
-        <a href="#" class="button" onclick="buttonCall('tornadoTown');">Tornado Town</a>
-        <a href="#" class="button" onclick="buttonCall('smokeStack');">Smoke Stack</a>
-        <a href="#" class="button" onclick="buttonCall('renewableFarm');">Renewable Farm</a>
+        <a href="#" class="button" id="menub" onclick="buttonCall('menu');">Menu</a>
+        <a href="#" class="button" id="enterb" onclick="buttonCall('enter');" id="enter">Enter</a>
+        <a href="#" class="button" id="floodb" onclick="buttonCall('floodTown');">Flood Town</a>
+        <a href="#" class="button" id="forestb" onclick="buttonCall('forest');">Fire Forest</a>
+        <a href="#" class="button" id="tornadob" onclick="buttonCall('tornadoTown');">Tornado Town</a>
+        <a href="#" class="button" id="smokeb" onclick="buttonCall('smokeStack');">Smoke Stack</a>
+        <a href="#" class="button" id="renewb" onclick="buttonCall('renewableFarm');">Renewable Farm</a>
     </div>
     <script src="js/three.min.js"></script>
     <script src="js/Detector.js"></script>
@@ -200,8 +213,7 @@
         var scene, camera, renderer, raycaster, material, illum, water, tornado, waterHt = 1,
             lastVal = 0,
             particles, particleCount, particleSystem;
-        var locationFlag,
-            infoElement;
+        var locationFlag, infoElement, showRunning = false;;
         var textureLoader = new THREE.TextureLoader();
         var mouse = new THREE.Vector2(),
             INTERSECTED;
@@ -399,22 +411,33 @@
                 locationFlag = targetLoc; // set current location flag
                 if (targetLoc == "menu") {
                     document.getElementById("header").className = 'fade-in';
+                    document.getElementById("enterb").className = 'fade-in';
+                    runAnimation(-130, 220, 470, 1, -.22, -.55);
                 } else if (targetLoc == "enter") {
                     //                        document.getElementById("infoBox").className = 'delay';
+                    console.log("enter and show floodtown");
                     document.getElementById("header").className = 'fade-out';
+                    runAnimation(-140, 160, 370, -.3, -.22, -.05);
 
                     enter();
                 } else if (targetLoc == "floodTown") {
                     console.log("hello!");
+                    runAnimation(-280, 60, 50, -.4, -.6, -.15);
+
                     floodTown();
                 } else if (targetLoc == "forest") {
                     console.log("hello!!!!");
+                    runAnimation(-50, 50, -50, -.08, -.5, -.02);
+
                     forest();
                 } else if (targetLoc == "tornadoTown") {
+                    runAnimation(160, 45, 0, -.04, -.15, -.05);
                     tornadoTown();
                 } else if (targetLoc == "smokeStack") {
+                    runAnimation(110, 50, -30, 0.04, -1.75, 0);
                     smokeStack();
                 } else {
+                    runAnimation(45, 50, -30, 0.04, -3.35, 0.05);
                     renewableFarm();
                 }
             } else {
@@ -441,62 +464,97 @@
         // }
         //
         // }
+        
+        function runAnimation(xLoc, yLoc, zLoc, rot) {
+            // check to see if this is the start of the show
+            // if this is the beginning, don't run fade-out animation
+            if(showRunning){
+                document.getElementById("info").className = 'fade-out';
+            }else{
+                //good, we've started, now run fade-in/out normally
+                showRunning = true;
+            }
+            
+            var pos1 = new TWEEN.Tween(camera.position).to({
+                x: xLoc,
+                y: yLoc,
+                z: zLoc
+            }, 4000).
+            easing(TWEEN.Easing.Quadratic.InOut).
+            onComplete(function() {
+                displayInfo();
+            }).start();
+
+            var rot1 = new TWEEN.Tween(camera.rotation).to({
+                x: xRot,
+                y: yRot,
+                z: zRot
+                
+            }, 5000).easing(TWEEN.Easing.Quadratic.InOut).start();
+        }
+        
         function menu() {
             console.log("Location called");
             // Hide info boxes
             document.getElementById("info").style.visibility = "hidden";
-            var pos1 = new TWEEN.Tween(camera.position).to({
-                x: -130,
-                y: 220,
-                z: 470
-            }, 2000).easing(TWEEN.Easing.Quadratic.InOut);
-            var rot1 = new TWEEN.Tween(camera.rotation).to({
-                x: 1,
-                y: -.22,
-                z: -.05
-            }, 2000).easing(TWEEN.Easing.Quadratic.InOut);
-            pos1.start();
-            rot1.start();
+//            var pos1 = new TWEEN.Tween(camera.position).to({
+//                x: -130,
+//                y: 220,
+//                z: 470
+//            }, 2000).easing(TWEEN.Easing.Quadratic.InOut);
+//            var rot1 = new TWEEN.Tween(camera.rotation).to({
+//                x: 1,
+//                y: -.22,
+//                z: -.05
+//            }, 2000).easing(TWEEN.Easing.Quadratic.InOut);
+//            pos1.start();
+//            rot1.start();
         }
 
         function enter() {
             console.log("Location called");
             // Hide info boxes
-            document.getElementById("info").style.visibility = "hidden";
+            //            document.getElementById("info").style.visibility = "hidden";
             //                document.getElementById("enterInfo").style.visibility = "hidden";
-            var pos1 = new TWEEN.Tween(camera.position).to({
-                x: -140,
-                y: 160,
-                z: 370
-            }, 3000).easing(TWEEN.Easing.Quadratic.InOut);
-            var rot1 = new TWEEN.Tween(camera.rotation).to({
-                x: -.3,
-                y: -.22,
-                z: -.05
-            }, 3000).easing(TWEEN.Easing.Quadratic.InOut);
-            pos1.start();
-            rot1.start();
-            displayInfo();
+            document.getElementById("floodb").style.visiblity = 'visible';
+            document.getElementById("floodb").style.opacity = 1;
+            
+////            document.getElementById("floodb").className = 'fade-in';
+//            var pos1 = new TWEEN.Tween(camera.position).to({
+//                x: -140,
+//                y: 160,
+//                z: 370
+//            }, 3000).easing(TWEEN.Easing.Quadratic.InOut).onComplete(function() {
+//                displayInfo();
+//            });
+//            var rot1 = new TWEEN.Tween(camera.rotation).to({
+//                x: -.3,
+//                y: -.22,
+//                z: -.05
+//            }, 3000).easing(TWEEN.Easing.Quadratic.InOut);
+//            pos1.start();
+//            rot1.start();
+            //            displayInfo();
         }
 
         function floodTown() {
             console.log("Location called");
             // Hide info boxes
             document.getElementById("info").style.visibility = "hidden";
-            //                document.getElementById("floodInfo").style.visibility = "hidden";
-            //                console.log("flood info =" + floodInfo);
-            var pos1 = new TWEEN.Tween(camera.position).to({
-                x: -280,
-                y: 60,
-                z: 50
-            }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
-            var rot1 = new TWEEN.Tween(camera.rotation).to({
-                x: -.4,
-                y: -.6,
-                z: -.15
-            }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
-            pos1.start();
-            rot1.start();
+//            //                document.getElementById("floodInfo").style.visibility = "hidden";
+//            //                console.log("flood info =" + floodInfo);
+//            var pos1 = new TWEEN.Tween(camera.position).to({
+//                x: -280,
+//                y: 60,
+//                z: 50
+//            }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
+//            var rot1 = new TWEEN.Tween(camera.rotation).to({
+//                x: -.4,
+//                y: -.6,
+//                z: -.15
+//            }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
+//            pos1.start();
+//            rot1.start();
             displayInfo();
         }
 
@@ -505,18 +563,18 @@
             // Hide info boxes
             document.getElementById("info").style.visibility = "hidden";
             //                document.getElementById("forestInfo").style.visibility = "hidden";
-            var pos1 = new TWEEN.Tween(camera.position).to({
-                x: -50,
-                y: 50,
-                z: -50
-            }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
-            var rot1 = new TWEEN.Tween(camera.rotation).to({
-                x: -.08,
-                y: -.5,
-                z: -.02
-            }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
-            pos1.start();
-            rot1.start();
+//            var pos1 = new TWEEN.Tween(camera.position).to({
+//                x: -50,
+//                y: 50,
+//                z: -50
+//            }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
+//            var rot1 = new TWEEN.Tween(camera.rotation).to({
+//                x: -.08,
+//                y: -.5,
+//                z: -.02
+//            }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
+//            pos1.start();
+//            rot1.start();
             displayInfo();
         }
 
@@ -525,18 +583,18 @@
             // Hide info boxes
             document.getElementById("info").style.visibility = "hidden";
             //                document.getElementById("tornadoInfo").style.visibility = "hidden";
-            var pos1 = new TWEEN.Tween(camera.position).to({
-                x: 160,
-                y: 45,
-                z: 0
-            }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
-            var rot1 = new TWEEN.Tween(camera.rotation).to({
-                x: -.04,
-                y: -.15,
-                z: -.05
-            }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
-            pos1.start();
-            rot1.start();
+//            var pos1 = new TWEEN.Tween(camera.position).to({
+//                x: 160,
+//                y: 45,
+//                z: 0
+//            }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
+//            var rot1 = new TWEEN.Tween(camera.rotation).to({
+//                x: -.04,
+//                y: -.15,
+//                z: -.05
+//            }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
+//            pos1.start();
+//            rot1.start();
             displayInfo();
         }
 
@@ -545,18 +603,18 @@
             // Hide info boxes
             document.getElementById("info").style.visibility = "hidden";
             //                document.getElementById("smokeInfo").style.visibility = "hidden";
-            var pos1 = new TWEEN.Tween(camera.position).to({
-                x: 110,
-                y: 50,
-                z: -30
-            }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
-            var rot1 = new TWEEN.Tween(camera.rotation).to({
-                x: 0.04,
-                y: -1.75,
-                z: 0
-            }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
-            pos1.start();
-            rot1.start();
+//            var pos1 = new TWEEN.Tween(camera.position).to({
+//                x: 110,
+//                y: 50,
+//                z: -30
+//            }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
+//            var rot1 = new TWEEN.Tween(camera.rotation).to({
+//                x: 0.04,
+//                y: -1.75,
+//                z: 0
+//            }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
+//            pos1.start();
+//            rot1.start();
             displayInfo();
         }
 
@@ -565,18 +623,18 @@
             // Hide info boxes
             document.getElementById("info").style.visibility = "hidden";
             //                                document.getElementById("renewableInfo").style.visibility = "hidden";
-            var pos1 = new TWEEN.Tween(camera.position).to({
-                x: 45,
-                y: 50,
-                z: -30
-            }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
-            var rot1 = new TWEEN.Tween(camera.rotation).to({
-                x: 0.04,
-                y: -3.35,
-                z: 0.05
-            }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
-            pos1.start();
-            rot1.start();
+//            var pos1 = new TWEEN.Tween(camera.position).to({
+//                x: 45,
+//                y: 50,
+//                z: -30
+//            }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
+//            var rot1 = new TWEEN.Tween(camera.rotation).to({
+//                x: 0.04,
+//                y: -3.35,
+//                z: 0.05
+//            }, 4000).easing(TWEEN.Easing.Quadratic.InOut);
+//            pos1.start();
+//            rot1.start();
             displayInfo();
         }
 
@@ -586,7 +644,7 @@
             switch (locationFlag) {
                 case "enter":
                     infoElement.innerHTML = "<p>To introduce you to our little scene, this text has been displayed without fanfair or spectacle of any kind.<br>Enjoy!</p>"
-                    console.log("innerHTML =" + innerHTML);
+                    console.log("innerHTML =" + infoElement);
 
                     break;
                 case "floodTown":
@@ -596,6 +654,9 @@
                     infoElement.innerHTML = "<p>The farmlands were quiet and bright.<br>The air was clean and everyone breathed a sigh of relieve.<br>Even the cows were happy which is saying a lot given that they live nextdoor to the pigpen. The pigs were always happy because they knew  that they were the smartest animals on the land.</p>";
                     break;
             }
+            document.getElementById("infoBox").className = 'fade-in';
+            console.log("fade up");
+
         }
         //call the init function to run the code
         init();
