@@ -1,4 +1,5 @@
 <html>
+<link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro" rel="stylesheet">
 
 <head>
     <title>My first Three.js app</title>
@@ -52,6 +53,10 @@
 
         input[type=range].slide {
             -webkit-appearance: none;
+            -webkit-transform: rotate(270deg);
+            -moz-transform: rotate(270deg);
+            -o-transform: rotate(270deg);
+            -ms-transform: rotate(270deg);
             background-color: #666;
             height: 6px;
             width: 300px;
@@ -68,8 +73,8 @@
 
         #info {
             position: absolute;
-            /*            top: 20%;*/
-            right: 20%;
+                        top: 4%;
+/*            right: 10%;*/
             z-index: 101;
             width: 100%;
             /*            visibility: hidden;*/
@@ -77,13 +82,16 @@
 
         #infoBox {
             margin: 0 auto;
-            width: 30%;
+            width: 60%;
             padding: 10px;
             height: 100%;
-            background: rgba(255, 255, 255, 0.64);
+/*            background: rgba(255, 255, 255, 0.64);*/
             border-radius: 5px;
-            font-size: 1.1em;
+            font-size: 1.5em;
             opacity: 0;
+            color: white;
+                        font-family: 'Source Sans Pro', sans-serif;
+
         }
 
         #menuInfo,
@@ -95,9 +103,12 @@
         #renewableInfo {
             visibility: hidden;
         }
+        
+        .leftAlign{
+            text-align: left;
+        }
 
-/*        #menub,*/
-        /*        #enterb,*/
+        #menub,
         #floodb,
         #slider,
         #forestb,
@@ -106,6 +117,29 @@
         #renewb {
             visibility: hidden;
             opacity: 0;
+            margin: 40px;
+            background: #3CCEFF;
+            color: #fff;
+            text-decoration: none;
+            padding: 15px;
+            border-radius: 5px;
+            text-align: center;
+            font-family: 'Source Sans Pro', sans-serif;
+
+        }
+        
+        #enterb{
+            visibility: visible;
+/*            opacity: 0;*/
+            margin: 40px;
+            background: #3CCEFF;
+            color: #fff;
+            text-decoration: none;
+            padding: 15px;
+            border-radius: 5px;
+            text-align: center;
+            font-family: 'Source Sans Pro', sans-serif;
+
         }
 
 
@@ -114,9 +148,9 @@
             position: absolute;
             /*            width: 40%;*/
             text-align: center;
-            font-family: 'roboto', sans-serif;
             color: #ffffff;
             font-size: 24;
+
         }
 
         .fade-out {
@@ -325,16 +359,16 @@
             mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
             mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
         }
-        document.onmousedown = function(e) {
-            raycaster.setFromCamera(mouse, camera);
-            var intersects = raycaster.intersectObjects(scene.children, true);
-            if (intersects.length > 0) {
-                INTERSECTED = intersects[0].object;
-                if (INTERSECTED.parent.name == "water") {
-                    INTERSECTED.position.z += 1.5;
-                }
-            }
-        }
+        //        document.onmousedown = function(e) {
+        // raycaster.setFromCamera(mouse, camera);
+        // var intersects = raycaster.intersectObjects(scene.children, true);
+        // if (intersects.length > 0) {
+        // INTERSECTED = intersects[0].object;
+        // if (INTERSECTED.parent.name == "water") {
+        // INTERSECTED.position.z += 1.5;
+        // }
+        // }
+        // }
         window.addEventListener("resize", () => {
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
@@ -383,12 +417,16 @@
                 if (targetLoc == "menu") {
                     document.getElementById("header").className = 'fade-in';
                     document.getElementById("enterb").className = 'fade-in';
-                    document.getElementById("enterb").style.visibility = 'visible';
+                    //                    document.getElementById("enterb").style.visibility = 'visible';
+                    document.getElementById("menub").style.visibility = 'hidden';
                     runAnimation(-130, 220, 470, 1, -.22, -.55);
                 } else if (targetLoc == "enter") {
                     //                        document.getElementById("infoBox").className = 'delay';
                     document.getElementById("floodb").className = 'fade-in';
+                    document.getElementById("floodb").className = 'delay';
                     document.getElementById("floodb").style.visibility = 'visible';
+                    document.getElementById("menub").className = 'fade-in';
+                    document.getElementById("menub").style.visibility = 'visible';
                     console.log("enter and show floodtown");
                     document.getElementById("header").className = 'fade-out';
                     runAnimation(-140, 160, 370, -.3, -.22, -.05);
@@ -396,6 +434,7 @@
                     //                    enter();
                 } else if (targetLoc == "floodTown") {
                     document.getElementById("forestb").className = 'fade-in';
+                    document.getElementById("forestb").className = 'delay';
                     document.getElementById("forestb").style.visibility = 'visible';
                     console.log("hello!");
                     runAnimation(-280, 60, 50, -.4, -.6, -.15);
@@ -406,6 +445,7 @@
                     //                    floodTown();
                 } else if (targetLoc == "forest") {
                     document.getElementById("tornadob").className = 'fade-in';
+                    document.getElementById("tornadob").className = 'delay';
                     document.getElementById("tornadob").style.visibility = 'visible';
                     console.log("hello!!!!");
                     runAnimation(-50, 50, -50, -.08, -.5, -.02);
@@ -413,11 +453,13 @@
                     //                    forest();
                 } else if (targetLoc == "tornadoTown") {
                     document.getElementById("smokeb").className = 'fade-in';
+                    document.getElementById("smokeb").className = 'delay';
                     document.getElementById("smokeb").style.visibility = 'visible';
                     runAnimation(160, 45, 0, -.04, -.15, -.05);
                     //                    tornadoTown();
                 } else if (targetLoc == "smokeStack") {
                     document.getElementById("renewb").className = 'fade-in';
+                    document.getElementById("renewb").className = 'delay';
                     document.getElementById("renewb").style.visibility = 'visible';
                     runAnimation(110, 50, -30, 0.04, -1.75, 0);
                     //                    smokeStack();
@@ -431,30 +473,32 @@
 
         }
 
-        //            function showVal(val) {
-        // if (val != lastVal) {
-        // if (val > lastVal) {
-        // waterHt += 0.07;
-        // new TWEEN.Tween(water.scale).to({
-        // y: waterHt
-        // }, 800).easing(TWEEN.Easing.Quadratic.InOut).start();
-        // } else {
-        // waterHt -= 0.07;
-        // new TWEEN.Tween(water.scale).to({
-        // y: waterHt
-        // }, 800).easing(TWEEN.Easing.Quadratic.InOut).start();
-        //
-        // }
-        // lastVal = val;
-        // }
-        //
-        // }
+        function showVal(val) {
+            if (val != lastVal) {
+                if (val > lastVal) {
+                    waterHt += 1.5;
+                    new TWEEN.Tween(water.scale).to({
+                        z: waterHt
+                    }, 800).easing(TWEEN.Easing.Quadratic.InOut).start();
+                } else {
+                    waterHt -= 1.5;
+                    new TWEEN.Tween(water.scale).to({
+                        z: waterHt
+                    }, 800).easing(TWEEN.Easing.Quadratic.InOut).start();
+
+                }
+                lastVal = val;
+            }
+
+        }
 
         function runAnimation(xLoc, yLoc, zLoc, xRot, yRot, zRot) {
             // check to see if this is the start of the show
             // if this is the beginning, don't run fade-out animation
             if (showRunning) {
                 document.getElementById("infoBox").className = 'fade-out';
+                document.getElementById("slider").className = 'fade-out';
+                //                document.getElementById("slider").style.visibility = 'hidden';
             } else {
                 //good, we've started, now run fade-in/out normally
                 showRunning = true;
@@ -480,80 +524,19 @@
             }, 5000).easing(TWEEN.Easing.Quadratic.InOut).start();
         }
 
-        function menu() {
-            console.log("Location called");
-            // Hide info boxes
-            //            document.getElementById("info").style.visibility = "hidden";
-            //            
-        }
 
-        function enter() {
-            console.log("Location called");
-            // Hide info boxes
-            //            document.getElementById("info").style.visibility = "hidden";
-            //                document.getElementById("enterInfo").style.visibility = "hidden";
-            //            document.getElementById("floodb").style.visiblity = 'visible';
-            //            document.getElementById("floodb").style.opacity = 1;
-
-            //            displayInfo();
-        }
-
-        function floodTown() {
-            console.log("Location called");
-            // Hide info boxes
-            //            document.getElementById("info").style.visibility = "hidden";
-
-
-            //            displayInfo();
-        }
-
-        function forest() {
-            console.log("Location called");
-            // Hide info boxes
-            //            document.getElementById("info").style.visibility = "hidden";
-            //                document.getElementById("forestInfo").style.visibility = "hidden";
-
-            //            displayInfo();
-        }
-
-        function tornadoTown() {
-            console.log("Location called");
-            // Hide info boxes
-            //            document.getElementById("info").style.visibility = "hidden";
-            //                document.getElementById("tornadoInfo").style.visibility = "hidden";
-
-            //            displayInfo();
-        }
-
-        function smokeStack() {
-            console.log("Location called");
-            // Hide info boxes
-            //            document.getElementById("info").style.visibility = "hidden";
-            //                document.getElementById("smokeInfo").style.visibility = "hidden";
-
-            //            displayInfo();
-        }
-
-        function renewableFarm() {
-            console.log("Location called");
-            // Hide info boxes
-            //            document.getElementById("info").style.visibility = "hidden";
-            //                                document.getElementById("renewableInfo").style.visibility = "hidden";
-
-            //            displayInfo();
-        }
 
         function displayInfo() {
             //            document.getElementById("info").className = 'fade-in';
             console.log("location flag =" + locationFlag);
             switch (locationFlag) {
                 case "enter":
-                    infoElement.innerHTML = "<p>To introduce you to our little scene, this text has been displayed without fanfair or spectacle of any kind.<br>Enjoy!</p>"
+                    infoElement.innerHTML = "The increase of CO2 in our environment is causing serious changes to the Earth. These changes have our planet on a very dangerous trajectory. </p>"
                     console.log("innerHTML =" + infoElement);
 
                     break;
                 case "floodTown":
-                    infoElement.innerHTML = "<p>The city was loud and dark. The smog had closed in and the people could no longer breath.<br>Sirens in the night echoed the wailing of the masses as the smog enveloped them in it's dark, dank cloak of dispair.</p>";
+                    infoElement.innerHTML = "<p>The increase in CO2 has caused the overall temperature of the planet to increase, which is causing ice bergs and ice caps to melt. This causes a dangerous rise in sea level. <br> <br> Move the slider to see the difference just a few degrees can make</p>";
                     console.log("innerHTML =" + infoElement);
                     break;
                 case "forest":
@@ -566,6 +549,7 @@
         }
         //call the init function to run the code
         init();
+
     </script>
 </body>
 
