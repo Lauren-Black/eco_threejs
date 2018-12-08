@@ -243,7 +243,7 @@
     <script src="js/OrbitControls.js"></script>
     <script src="js/tween.min.js"></script>
     <script>
-        var scene, camera, renderer, raycaster, material, illum, water, tornado, waterHt = 1,
+        var scene, camera, renderer, raycaster, material, illum, water, tornado, blades, turbinebase, sPanel1, sPanel2, waterHt = 1,
             lastVal = 0,
             particles, particleCount, particleSystem;
         var locationFlag, infoElement, showRunning = false;;
@@ -254,6 +254,7 @@
         console.log(hexColour);
 
         function init() {
+            console.log("Happy Holidays James! :) - your favourite student");
             infoElement = document.getElementById("infoBox");
 
             illum = false;
@@ -274,7 +275,7 @@
             renderer.shadowMap.type = THREE.PCFSoftShadowMap;
             //add to webpage
             document.body.appendChild(renderer.domElement);
-            var backlight = new THREE.DirectionalLight(0xffffff, 1.5);
+            var backlight = new THREE.DirectionalLight(0xff9955, 1.5);
             backlight.position.set(-10, 20, -10).normalize();
             backlight.intensity = 1.2;
             scene.add(backlight);
@@ -282,7 +283,7 @@
             frontlight.position.set(6, 15, 15).normalize();
             frontlight.intensity = 1;
             scene.add(frontlight);
-            particleCount = 1500;
+            particleCount = 1000;
             particles = new THREE.Geometry();
             var colin = 0;
             for (var i = 0; i < 6; i++) {
@@ -299,24 +300,21 @@
                 alphaTest: 0.3,
                 opacity: 0.9,
                 transparent: true
+
             });
-            var pMaterial2 = new THREE.PointsMaterial({
-                color: 0xfff,
-                size: 3,
-                map: textureLoader.load("../img/flame.png"),
-                alphaTest: 0.3,
-                opacity: 0.9,
-                transparent: true
-            });
+
+
+
+
             for (var i = 0; i < particleCount; i++) {
-                var pX = Math.random() * 50 - 10,
+                var pX = Math.random() * 30,
                     pY = 10,
-                    pZ = Math.random() * 80 - 180;
+                    pZ = Math.random() * 60 - 170;
                 var particle = new THREE.Vector3(pX, pY, pZ);
                 particle.velocity = new THREE.Vector3(0, (Math.random() * 0.9), 0);
                 particles.vertices.push(particle);
             }
-            particleSystem = new THREE.Points(particles, pMaterial1, pMaterial2);
+            particleSystem = new THREE.Points(particles, pMaterial1);
             particleSystem.sortParticles = true;
             scene.add(particleSystem);
             var loader = new THREE.ColladaLoader();
@@ -334,7 +332,11 @@
                 scene.add(dae);
                 water = dae.getObjectByName("water", true);
                 tornado = dae.getObjectByName("tornado", true);
-                console.log(tornado);
+                blades = dae.getObjectByName("blades", true);
+                turbinebase = dae.getObjectByName("turbinebase", true);
+                sPanel1 = dae.getObjectByName("s-panel1", true);
+                sPanel2 = dae.getObjectByName("s-panel2", true);
+                console.log(blades);
                 //                var controls = new THREE.OrbitControls(camera, renderer.domElement);
                 //Fetch camera positions and orientation.
                 //                    window.addEventListener('click', function() {
@@ -384,6 +386,11 @@
             var orbit = Date.now() * 0.01;
             TWEEN.update();
             tornado.rotation.z += 0.1;
+            blades.rotation.z += 0.1;
+            //            blades.style.visibility = "hidden";
+            // sPanel1.style.visibility = "hidden";
+            // sPanel2.style.visibility = "hidden";
+            // turbinebase.style.visibility = "hidden";
             for (var i = 0; i < particleCount; i++) {
                 var ptcl = particles.vertices[i];
                 //check if its above level and if so reset
@@ -394,8 +401,7 @@
                 ptcl.velocity.y += Math.random() * 0.001;
                 ptcl.add(ptcl.velocity);
             }
-            particles.verticesNeedUpdate = true;
-            //distance
+            particles.verticesNeedUpdate = true; //distance
             //camera.position.x = Math.cos(timer) * 250;
             //camera.position.z = Math.sin(timer) * 250;
             //camera.lookAt(scene.position);
@@ -549,7 +555,6 @@
         }
         //call the init function to run the code
         init();
-
     </script>
 </body>
 
