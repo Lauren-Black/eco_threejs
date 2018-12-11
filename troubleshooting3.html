@@ -275,11 +275,11 @@
             renderer.shadowMap.type = THREE.PCFSoftShadowMap;
             //add to webpage
             document.body.appendChild(renderer.domElement);
-            var backlight = new THREE.DirectionalLight(0xff9955, 1.5);
+            var backlight = new THREE.DirectionalLight(0xFFD98D, 1.5);
             backlight.position.set(-10, 20, -10).normalize();
             backlight.intensity = 1.2;
             scene.add(backlight);
-            var frontlight = new THREE.DirectionalLight(0xffffff, 1.5);
+            var frontlight = new THREE.DirectionalLight(0xFFCBAE, 1.5);
             frontlight.position.set(6, 15, 15).normalize();
             frontlight.intensity = 1;
             scene.add(frontlight);
@@ -442,8 +442,10 @@
                     document.getElementById("forestb").className = 'fade-in';
                     document.getElementById("forestb").className = 'delay';
                     document.getElementById("forestb").style.visibility = 'visible';
+                    document.getElementById("infoBox").style.textAlign = 'left';
                     console.log("hello!");
                     runAnimation(-280, 60, 50, -.4, -.6, -.15);
+                    document.getElementById("infoBox").style.textAlign = 'left';
                     document.getElementById("slider").className = 'fade-in';
                     document.getElementById("slider").style.visibility = 'visible';
 
@@ -461,6 +463,7 @@
                     document.getElementById("smokeb").className = 'fade-in';
                     document.getElementById("smokeb").className = 'delay';
                     document.getElementById("smokeb").style.visibility = 'visible';
+
                     runAnimation(160, 45, 0, -.04, -.15, -.05);
                     //                    tornadoTown();
                 } else if (targetLoc == "smokeStack") {
