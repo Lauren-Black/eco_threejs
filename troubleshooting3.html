@@ -19,8 +19,6 @@
             /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
         }
 
-        #canvas {}
-
         #header {
             position: absolute;
             width: 100%;
@@ -36,7 +34,8 @@
 
         #inner {
             position: absolute;
-            bottom: 30px;
+/*            bottom: 1px;*/
+            top: 630px;
             width: 100%;
             z-index: 100;
         }
@@ -51,25 +50,16 @@
             text-align: center;
         }
 
-        input[type=range].slide {
-            -webkit-appearance: none;
-            -webkit-transform: rotate(270deg);
-            -moz-transform: rotate(270deg);
-            -o-transform: rotate(270deg);
-            -ms-transform: rotate(270deg);
-            background-color: #666;
-            height: 6px;
-            width: 300px;
-            border-radius: 3px;
-        }
-
+        
         input[type="range"]::-webkit-slider-thumb {
             -webkit-appearance: none;
-            background-color: #bbb;
+            background: #deaa35;
             width: 20px;
             height: 20px;
             border-radius: 50%;
         }
+        
+        
 
         #info {
             position: absolute;
@@ -82,15 +72,15 @@
 
         #infoBox {
             margin: 0 auto;
-            width: 60%;
+            width: 40%;
             padding: 10px;
             height: 100%;
-/*            background: rgba(255, 255, 255, 0.64);*/
+            background: rgba(255, 195, 113, 0.6);
             border-radius: 5px;
-            font-size: 1.5em;
+            font-size: 1.3em;
             opacity: 0;
             color: white;
-                        font-family: 'Source Sans Pro', sans-serif;
+            font-family: 'Source Sans Pro', sans-serif;
 
         }
 
@@ -104,13 +94,28 @@
             visibility: hidden;
         }
         
-        .leftAlign{
-            text-align: left;
+        
+        #slider{
+            visibility: hidden;
+            opacity: 0;
+            -webkit-appearance: none;
+            -webkit-transform:rotate(270deg); 
+            -moz-transform:rotate(270deg); 
+            -o-transform:rotate(270deg); 
+            -ms-transform:rotate(270deg); 
+            transform:rotate(270deg); 
+            background-color: #6bc6ff;
+            height: 10px;
+            width: 300px;
+            border-radius: 3px;
+            margin-top: -250px;
+            float: right;
+            
         }
+        
 
         #menub,
         #floodb,
-        #slider,
         #forestb,
         #tornadob,
         #smokeb,
@@ -128,6 +133,8 @@
 
         }
         
+        
+        
         #enterb{
             visibility: visible;
 /*            opacity: 0;*/
@@ -141,12 +148,47 @@
             font-family: 'Source Sans Pro', sans-serif;
 
         }
+        
+        #menub:hover {
+            background: #027D9E;
+            bottom: 10%;
+        }
+        
+        #floodb:hover{
+            background: #027D9E;
+            bottom: 10%;
+        }
+        
+        #forestb:hover{
+            background: #027D9E;
+            bottom: 10%;
+        }
+        
+        #tornadob:hover {
+            background: #027D9E;
+            bottom: 10%;
+        }
+        
+        #smokeb:hover {
+            background: #027D9E;
+            bottom: 10%;
+        }
+        
+        #renewb:hover {
+            background: #027D9E;
+            bottom: 10%;
+        }
+        
+        #enterb:hover {
+            background: #027D9E;
+            box-shadow: 3px, 3px, 6px;
+        }
 
 
 
         .infoBoxes {
             position: absolute;
-            /*            width: 40%;*/
+/*            width: 40%;*/
             text-align: center;
             color: #ffffff;
             font-size: 24;
@@ -210,6 +252,30 @@
                 opacity: 1;
             }
         }
+        
+        #slideText{
+            visibility: hidden;
+            opacity: 0;
+        }
+        
+        p2{
+            float: right;
+            margin-top: -395px;
+            margin-right: 100px;
+            font-family: 'Source Sans Pro', sans-serif;
+            color: white;
+        }
+        
+        #slideTitle{
+            display: flex;
+            flex-wrap: wrap;
+            float: right;
+/*            margin-top: -30px;*/
+            margin-top: -470px;
+            margin-right: 50px;
+            font-family: 'Source Sans Pro', sans-serif;
+            color: white;
+        }
     </style>
 </head>
 
@@ -226,9 +292,19 @@
         </div>
 
     </div>
+
     <div id="inner">
 
         <input class="slide" id="slider" type="range" min="0" max="4" step="2" value="0" oninput="showVal(this.value)">
+        <div id="slideText">
+            <div id="slideTitle">
+                <p><strong>Increase the Earth's Temperature</strong> </p>
+            </div>
+            <div>
+                <p2>4c <br><br><br><br><br><br><br> 2c</p2>
+            </div>
+        </div>
+
         <a href="#" class="button" id="menub" onclick="buttonCall('menu');">Menu</a>
         <a href="#" class="button" id="enterb" onclick="buttonCall('enter');" id="enter">Enter</a>
         <a href="#" class="button" id="floodb" onclick="buttonCall('floodTown');">Flood Town</a>
@@ -243,15 +319,18 @@
     <script src="js/OrbitControls.js"></script>
     <script src="js/tween.min.js"></script>
     <script>
-        var scene, camera, renderer, raycaster, material, illum, water, tornado, blades, turbinebase, sPanel1, sPanel2, waterHt = 1,
+        var scene, camera, renderer, raycaster, material, illum, water, tornado, iceburg, blades, turbinebase, sPanel1, sPanel2, waterHt = 1,
+            iceburgHt = 1,
             lastVal = 0,
             particles, particleCount, particleSystem;
         var locationFlag, infoElement, showRunning = false;;
         var textureLoader = new THREE.TextureLoader();
         var mouse = new THREE.Vector2(),
             INTERSECTED;
-        var hexColour = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 'a', 'b', 'c', 'd', 'e', 'f'];
-        console.log(hexColour);
+        //        var hexColour = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 'a', 'b', 'c', 'd', 'e', 'f'];
+        // console.log(hexColour);
+
+
 
         function init() {
             console.log("Happy Holidays James! :) - your favourite student");
@@ -260,6 +339,29 @@
             illum = false;
             //add detector to see if WebGL is supported
             if (!Detector.webgl) Detector.addGetWebGLMessage();
+
+            /*********************************************/
+            /*************  Create Waves      ************/
+            /*********************************************/
+            // create timer
+            //            clock = new THREE.Clock();
+
+            //            // Water
+            //            wavelengthDefault = 12;
+            //            wavelength = wavelengthDefault;
+            //            amplitudeDefault = 0.1;
+            //            amplitude = amplitudeDefault;
+            //            speedDefault = -0.005;
+            //            speed = speedDefault;
+            //            depthDefault = 8;
+            //            depth = depthDefault;
+            //            noiseDefault = 0.2;
+            //            noiseSpdDefault = 8;
+            //            noise = noiseDefault;
+            //            noiseSpeed = noiseSpdDefault;
+            //            /*********************************************/
+            //            /*********************************************/
+            //            /*********************************************/
             //set up a scene
             scene = new THREE.Scene();
             //add a camera
@@ -283,22 +385,17 @@
             frontlight.position.set(6, 15, 15).normalize();
             frontlight.intensity = 1;
             scene.add(frontlight);
-            particleCount = 1000;
+            particleCount = 200;
             particles = new THREE.Geometry();
-            var colin = 0;
-            for (var i = 0; i < 6; i++) {
-                var ranCol = Math.floor(Math.random() * 16);
-                colin += hexColour[ranCol];
-                console.log(colin);
-                //                    var colour += colin;
-            }
+            //            var colin = 0;
+            // for (var i = 0; i < 6; i++) { // var ranCol=Math.floor(Math.random() * 16); // colin +=hexColour[ranCol]; // console.log(colin); // // var colour +=colin; // }
             //                console.log("colour is..." + colour);
             var pMaterial1 = new THREE.PointsMaterial({
-                color: 0xD80000,
-                size: 3,
-                map: textureLoader.load("../img/flame.png"),
+                //                color: 0xD80000,
+                size: 20,
+                map: textureLoader.load("../img/flame2.png"),
                 alphaTest: 0.3,
-                opacity: 0.9,
+                opacity: 0.6,
                 transparent: true
 
             });
@@ -316,6 +413,9 @@
             }
             particleSystem = new THREE.Points(particles, pMaterial1);
             particleSystem.sortParticles = true;
+
+
+
             scene.add(particleSystem);
             var loader = new THREE.ColladaLoader();
             loader.options.convertUpAxis = true;
@@ -327,16 +427,18 @@
                         child.receiveShadow = true;
                     }
                 });
+                iceburg = dae.getObjectByName('iceburg', true);
+                console.log(iceburg);
+                iceburg.scale.x = iceburg.scale.y = iceburg.scale.z = 2;
+                //                iceburg.position.y = 5;
+                //                iceburg.position.x = -25;
                 dae.scale.x = dae.scale.y = dae.scale.z = 10;
                 dae.updateMatrix();
                 scene.add(dae);
-                water = dae.getObjectByName("water", true);
-                tornado = dae.getObjectByName("tornado", true);
-                blades = dae.getObjectByName("blades", true);
-                turbinebase = dae.getObjectByName("turbinebase", true);
-                sPanel1 = dae.getObjectByName("s-panel1", true);
-                sPanel2 = dae.getObjectByName("s-panel2", true);
-                console.log(blades);
+                water = dae.getObjectByName('water', true);
+                tornado = dae.getObjectByName('tornado', true);
+                blades = dae.getObjectByName('blades', true);
+                //                iceburg = dae.getObjectByName("iceburg", true);
                 //                var controls = new THREE.OrbitControls(camera, renderer.domElement);
                 //Fetch camera positions and orientation.
                 //                    window.addEventListener('click', function() {
@@ -398,17 +500,31 @@
                     ptcl.y = 10;
                     ptcl.velocity.y = (Math.random() * 0.5);
                 }
-                ptcl.velocity.y += Math.random() * 0.001;
+                ptcl.velocity.y += Math.random() * 0.006;
                 ptcl.add(ptcl.velocity);
             }
-            particles.verticesNeedUpdate = true; //distance
-            //camera.position.x = Math.cos(timer) * 250;
-            //camera.position.z = Math.sin(timer) * 250;
-            //camera.lookAt(scene.position);
-            //keep displaying scene
+            particles.verticesNeedUpdate = true;
+
+            animIceburg(timer);
+
             renderer.render(scene, camera);
         }
-        //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------- TARGETLOC STUFF --------------------------------------------------------------------------------------------------------------------------------
+
+
+        /*********************************************************/
+        /*************      Bobbing Iceberg      ************/
+        /*********************************************************/
+
+
+
+        function animIceburg(timer) {
+            iceburg.rotation.y = Math.cos(timer * 20) * 0.04;
+            iceburg.rotation.z = Math.cos(timer * 20) * 0.04;
+        }
+
+
+
+        //--------------------------------------------------------------------------------------------------------------------------------------------------------------------********** THE BIG IF (...statement) ***********----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------//
 
         function buttonCall(targetLoc) {
             // Fade out title work using CSS animation (See Style tag above)
@@ -420,14 +536,28 @@
             // Move Camera to new location
             if (locationFlag != targetLoc) { // make sure we're not already there
                 locationFlag = targetLoc; // set current location flag
+
+
+                /*********************************************************/
+                /*************          Menu Button          *************/
+                /*********************************************************/
+
+
                 if (targetLoc == "menu") {
                     document.getElementById("header").className = 'fade-in';
                     document.getElementById("enterb").className = 'fade-in';
                     //                    document.getElementById("enterb").style.visibility = 'visible';
                     document.getElementById("menub").style.visibility = 'hidden';
                     runAnimation(-130, 220, 470, 1, -.22, -.55);
+
+
+                    /*********************************************************/
+                    /*************      Enter Button and Info      ************/
+                    /*********************************************************/
+
+
+
                 } else if (targetLoc == "enter") {
-                    //                        document.getElementById("infoBox").className = 'delay';
                     document.getElementById("floodb").className = 'fade-in';
                     document.getElementById("floodb").className = 'delay';
                     document.getElementById("floodb").style.visibility = 'visible';
@@ -437,7 +567,14 @@
                     document.getElementById("header").className = 'fade-out';
                     runAnimation(-140, 160, 370, -.3, -.22, -.05);
 
-                    //                    enter();
+
+
+                    /*********************************************************/
+                    /**********      FloodTown Button and Info      **********/
+                    /*********************************************************/
+
+
+
                 } else if (targetLoc == "floodTown") {
                     document.getElementById("forestb").className = 'fade-in';
                     document.getElementById("forestb").className = 'delay';
@@ -449,9 +586,17 @@
                     document.getElementById("infoBox").style.marginLeft = 20;
                     document.getElementById("slider").className = 'fade-in';
                     document.getElementById("slider").style.visibility = 'visible';
+                    document.getElementById("slideText").className = 'fade-in';
+                    document.getElementById("slideText").style.visibility = 'visible';
 
 
-                    //                    floodTown();
+
+                    /*********************************************************/
+                    /*************      Forest Button and Info      ************/
+                    /*********************************************************/
+
+
+
                 } else if (targetLoc == "forest") {
                     document.getElementById("tornadob").className = 'fade-in';
                     document.getElementById("tornadob").className = 'delay';
@@ -459,23 +604,51 @@
                     console.log("hello!!!!");
                     runAnimation(-50, 50, -50, -.08, -.5, -.02);
 
-                    //                    forest();
+
+
+                    /*********************************************************/
+                    /*************      Tornado Button and Info      ************/
+                    /*********************************************************/
+
+
+
                 } else if (targetLoc == "tornadoTown") {
                     document.getElementById("smokeb").className = 'fade-in';
                     document.getElementById("smokeb").className = 'delay';
                     document.getElementById("smokeb").style.visibility = 'visible';
                     document.getElementById("infoBox").style.textAlign = 'right';
-                    document.getElementById("infoBox").style.right = 10;
+                    document.getElementById("infoBox").style.marginLeft = 600;
 
                     runAnimation(160, 45, 0, -.04, -.15, -.05);
-                    //                    tornadoTown();
+
+
+
+                    /*********************************************************/
+                    /*************      Smoke Button and Info      ************/
+                    /*********************************************************/
+
+
+
+
                 } else if (targetLoc == "smokeStack") {
+                    document.getElementById("infoBox").style.textAlign = 'left';
+                    document.getElementById("infoBox").style.marginLeft = 100;
                     document.getElementById("renewb").className = 'fade-in';
                     document.getElementById("renewb").className = 'delay';
                     document.getElementById("renewb").style.visibility = 'visible';
                     runAnimation(110, 50, -30, 0.04, -1.75, 0);
-                    //                    smokeStack();
+
+
+
+                    /*********************************************************/
+                    /*************      Renewable Button and Info      ************/
+                    /*********************************************************/
+
+
+
                 } else {
+                    document.getElementById("infoBox").style.textAlign = 'left';
+                    document.getElementById("infoBox").style.marginLeft = 100;
                     runAnimation(45, 50, -30, 0.04, -3.35, 0.05);
                     //                    renewableFarm();
                 }
@@ -485,18 +658,29 @@
 
         }
 
+
+        /*********************************************************/
+        /*******    Control the water with the slider     ********/
+        /*********************************************************/
+
+
+
         function showVal(val) {
             if (val != lastVal) {
                 if (val > lastVal) {
                     waterHt += 1.5;
+
                     new TWEEN.Tween(water.scale).to({
                         z: waterHt
                     }, 800).easing(TWEEN.Easing.Quadratic.InOut).start();
+
                 } else {
                     waterHt -= 1.5;
+
                     new TWEEN.Tween(water.scale).to({
                         z: waterHt
                     }, 800).easing(TWEEN.Easing.Quadratic.InOut).start();
+
 
                 }
                 lastVal = val;
@@ -504,19 +688,30 @@
 
         }
 
+        /*********************************************************/
+        /**    Check if we have been here yet (James' Code)   ****/
+        /*********************************************************/
+
+
+
         function runAnimation(xLoc, yLoc, zLoc, xRot, yRot, zRot) {
             // check to see if this is the start of the show
             // if this is the beginning, don't run fade-out animation
             if (showRunning) {
                 document.getElementById("infoBox").className = 'fade-out';
                 document.getElementById("slider").className = 'fade-out';
-                //                document.getElementById("slider").style.visibility = 'hidden';
+                document.getElementById("slideText").className = 'fade-out';
+
             } else {
-                //good, we've started, now run fade-in/out normally
+
                 showRunning = true;
-                //                document.getElementById("info").className = 'fade-in';
+
 
             }
+
+            /*********************************************************/
+            /***********  Tweening Function  (Mark's Code)    ************/
+            /*********************************************************/
 
             var pos1 = new TWEEN.Tween(camera.position).to({
                 x: xLoc,
@@ -536,10 +731,11 @@
             }, 5000).easing(TWEEN.Easing.Quadratic.InOut).start();
         }
 
-
+        /*********************************************************/
+        /*************      Fill Dynamic Text Box      ************/
+        /*********************************************************/
 
         function displayInfo() {
-            //            document.getElementById("info").className = 'fade-in';
             console.log("location flag =" + locationFlag);
             switch (locationFlag) {
                 case "enter":
@@ -548,7 +744,7 @@
 
                     break;
                 case "floodTown":
-                    infoElement.innerHTML = "<p>The increase in CO2 has caused the overall temperature of the planet to increase, which is causing ice bergs and ice caps to melt. This causes a dangerous rise in sea level. <br> <br> Move the slider to see the difference just a few degrees can make</p>";
+                    infoElement.innerHTML = "<p>The increase in CO2 has caused the overall temperature of the planet to increase, which is causing ice bergs and ice caps to melt. This causes a dangerous rise in sea level. <br> <br> <strong>Move the slider to see the difference just a few degrees can make</strong></p>";
                     console.log("innerHTML =" + infoElement);
                     break;
                 case "forest":
@@ -561,6 +757,7 @@
         }
         //call the init function to run the code
         init();
+
     </script>
 </body>
 
