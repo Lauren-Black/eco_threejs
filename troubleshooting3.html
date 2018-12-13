@@ -276,6 +276,26 @@
             font-family: 'Source Sans Pro', sans-serif;
             color: white;
         }
+        
+        #link {
+            width: 150px;
+            height: 40px;
+            background-color: #3582E1;
+            border-radius: 8px;
+            padding: 4px;
+            text-align: center;
+            padding-top: 30px;
+
+            
+        }
+        
+        a {
+            text-decoration: none;
+            color: white;
+/*            display: flex;*/
+            
+            
+        }
     </style>
 </head>
 
@@ -303,6 +323,9 @@
             <div>
                 <p2>4c <br><br><br><br><br><br><br> 2c</p2>
             </div>
+        </div>
+        <div id="link">
+            <a href="https://350.org/">350.org</a>
         </div>
 
         <a href="#" class="button" id="menub" onclick="buttonCall('menu');">Menu</a>
@@ -463,16 +486,7 @@
             mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
             mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
         }
-        //        document.onmousedown = function(e) {
-        // raycaster.setFromCamera(mouse, camera);
-        // var intersects = raycaster.intersectObjects(scene.children, true);
-        // if (intersects.length > 0) {
-        // INTERSECTED = intersects[0].object;
-        // if (INTERSECTED.parent.name == "water") {
-        // INTERSECTED.position.z += 1.5;
-        // }
-        // }
-        // }
+
         window.addEventListener("resize", () => {
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
@@ -489,10 +503,15 @@
             TWEEN.update();
             tornado.rotation.z += 0.1;
             blades.rotation.z += 0.1;
-            //            blades.style.visibility = "hidden";
-            // sPanel1.style.visibility = "hidden";
-            // sPanel2.style.visibility = "hidden";
-            // turbinebase.style.visibility = "hidden";
+
+
+
+            /*********************************************************/
+            /****************  Set Particle Velocity   ***************/
+            /*********************************************************/
+
+
+
             for (var i = 0; i < particleCount; i++) {
                 var ptcl = particles.vertices[i];
                 //check if its above level and if so reset
@@ -757,7 +776,6 @@
         }
         //call the init function to run the code
         init();
-
     </script>
 </body>
 
