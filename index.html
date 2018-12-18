@@ -169,6 +169,10 @@
             padding: 15px;
             border-radius: 5px;
             text-align: center;
+            min-height: 280px;
+            max-height: 500px;
+            min-width: 400px;
+            max-width: 1473px;
             font-family: 'Source Sans Pro', sans-serif;
         }
         
@@ -419,22 +423,26 @@
             frontlight.position.set(6, 15, 15).normalize();
             frontlight.intensity = 1;
             scene.add(frontlight);
-            particleCount = 200;
-            particles = new THREE.Geometry();
-            var pMaterial1 = new THREE.PointsMaterial({
-                size: 20,
-                map: textureLoader.load("../img/flame2.png"),
-                alphaTest: 0.3,
-                opacity: 0.6,
-                transparent: true
 
-            });
+
 
 
             /*********************************************************/
             /****************  Create Particle System  (Mark) ***************/
             /*********************************************************/
 
+
+
+            particleCount = 200;
+            particles = new THREE.Geometry();
+            var pMaterial1 = new THREE.PointsMaterial({
+                size: 20,
+                map: textureLoader.load("flame2.png"),
+                alphaTest: 0.3,
+                opacity: 0.6,
+                transparent: true
+
+            });
 
             for (var i = 0; i < particleCount; i++) {
                 var pX = Math.random() * 30,
@@ -529,7 +537,6 @@
             var timer = Date.now() * 0.0001;
             var orbit = Date.now() * 0.01;
             TWEEN.update();
-            tornado.rotation.z += 0.1;
             blades.rotation.z += 0.1;
 
 
@@ -660,11 +667,15 @@
 
 
                 } else if (targetLoc == "tornadoTown") {
+                    requestAnimationFrame(render);
+
                     document.getElementById("smokeb").className = 'fade-in';
                     document.getElementById("smokeb").className = 'delay';
                     document.getElementById("smokeb").style.visibility = 'visible';
                     document.getElementById("infoBox").style.textAlign = 'right';
                     document.getElementById("infoBox").style.marginLeft = 600;
+                    tornado.rotation.z += 0.1;
+
 
                     runAnimation(160, 45, 0, -.04, -.15, -.05);
 
@@ -817,7 +828,6 @@
         }
         //call the init function to run the code
         init();
-
     </script>
 </body>
 
